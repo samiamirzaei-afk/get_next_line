@@ -15,13 +15,14 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#define BUFFER_SIZE 42
-
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 20
+#endif
 
 
 typedef struct s_list
 {
-	char *str;
+	char *content;
 	struct s_list *next;
 
-}	t_str_nodes;
+}	t_str_list;
