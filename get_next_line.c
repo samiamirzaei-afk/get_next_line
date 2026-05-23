@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/23 14:07:59 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/05/23 16:36:54 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,47 @@ void	ft_show(t_list *ptr)
 }
 
 
-int	ft_newline_check(char *buffer)
+int	ft_newline_search(char *buffer)
 {
 	size_t i;
 
 	i = 0;
-	while(buffer[i] && buffer[i] != '\n')
+	while(buffer[i])
 	{
-		
-	
-	
+		if(buffer[i] == '\n')
+				return(1);
+		i++;
 	}
-
+	return (-1);
 
 }
 
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
 
+char	*ft_cat_str(t_list *buffer, size_t length)
+{
+	char *str;
+	size_t i;
+	size_t j;
 
+	i = 0;
+	j = 0;
+	str = malloc((length + 1) * sizeof(char));
+	str[length] = '\0';
+	while(buffer->content)
+	{
+			j = 0;
+			while(buffer->content[j])
+			{
+				str[i] = buffer->content[j];
+				i++;
+				j++;
+			}
+			buffer = buffer->next;
+	}
+	return(str);
+}
 
 
 
@@ -78,10 +100,15 @@ void get_next_line(int fd)
 {
 	t_list *buffer_list;
 	t_list	*ptr;
+	t_list *test;
+
 	char buffer[BUFFER_SIZE + 1];
 	int check;
+	size_t length;
 
+	length = 0;
 	buffer_list = malloc(sizeof(t_list));	
+	test = buffer_list;
 	ptr = buffer_list;
 	while(1)
 	{
@@ -94,17 +121,23 @@ void get_next_line(int fd)
 			if(check == 0)
 				break;
 	buffer[BUFFER_SIZE] = '\0';
-	check = ft_newline_check(buffer);
-	if(check = 1)
+
+		length++;
+	if(ft_newline_search(buffer))
 	{
-			ft_show(buffer_list);
+			call_again();
+			printf("%s\n", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
+			length = 0;
 			buffer_list = ptr;
+
 	}
+	
 	ptr->content = ft_strdup(buffer);
 	ptr->next = list_new();
 	ptr = ptr->next;
 	}	
-	ft_show(buffer_list);
+	printf("\n\n");
+	ft_show(test);
 
 
 	return;
