@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/21 11:38:31 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/05/23 12:35:24 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 11
 #endif
+
+int	ft_putnbr(int nb);
 
 
 typedef struct s_list

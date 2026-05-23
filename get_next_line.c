@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/21 11:33:30 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/05/23 14:07:59 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@ int	call_again(void)
 {
 	static unsigned int line;
 
-	printf("Line[%d]:", line);
+	write(1, "Line", 4);
+	ft_putnbr(line);
+	write(1, " :", 2);
 	++line;	
 	return(line);
 	
@@ -24,91 +26,41 @@ int	call_again(void)
 
 /*	* * * TEST FUNCTIONS * * * 	*/
 
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
 
-	i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
-
-size_t	ft_strlen2(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-//	while (str[i] != '\0')
-//	{
-		write(1, &str[0], 1);
-		write(1, &str[1], 1);
-		write(1, &str[2], 1);
-		write(1, &str[3], 1);
-		write(1, &str[4], 1);
-		write(1, &str[5], 1);
-		write(1, &str[6], 1);
-		write(1, &str[7], 1);
-		write(1, &str[8], 1);
-		write(1, &str[9], 1);
-		write(1, &str[10], 1);
-		write(1, &str[11], 1);
-
-
-//	}
-	return (i);
-}
-
-
-char	*ft_strdup(char *src)
-{
-	int		length;
-	char	*copy;
-	int		i;
-
-	i = 0;
-	length = ft_strlen(src);
-	copy = malloc((length + 1) * sizeof(char));
-	if (!copy)
-		return (NULL);
-	copy[length] = '\0';
-	while (src[i] != '\0')
-	{
-		copy[i] = src[i];
-		i++;
-	}
-
-//	printf("%s\n", copy);
-	return (copy);
-}
-
-
-t_list	*list_new(char *new_str)
+t_list	*list_new(void)
 {
 	t_list *list;
 
 	list = malloc(sizeof(t_list));
 	if(list == NULL)
 			return(NULL);
-	list->content = new_str;
+	list->content = NULL;
 	list->next = NULL;
 	return(list);
 }
 
-
-
 void	ft_show(t_list *ptr)
 {
-//	t_list *current;
-
-//	current = *ptr;
-	while(ptr != NULL)
+	while(ptr->next != NULL)
 	{	
 		call_again();
-		write(1, &ptr->content[0], ft_strlen2(ptr->content));
-
-		//printf("%s\n", ptr->content);
+		if(ptr->content)
+			write(1, &ptr->content[0], ft_strlen(ptr->content));
 		ptr = ptr->next;
+	}
+}
+
+
+int	ft_newline_check(char *buffer)
+{
+	size_t i;
+
+	i = 0;
+	while(buffer[i] && buffer[i] != '\n')
+	{
+		
+	
+	
 	}
 
 
@@ -126,14 +78,12 @@ void get_next_line(int fd)
 {
 	t_list *buffer_list;
 	t_list	*ptr;
-	int count;
-	char buffer[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE + 1];
 	int check;
 
 	buffer_list = malloc(sizeof(t_list));	
 	ptr = buffer_list;
-	count = 0;
-	while (count < 10)
+	while(1)
 	{
 			check = read(fd , buffer, BUFFER_SIZE);
 			if(check == -1)
@@ -143,12 +93,18 @@ void get_next_line(int fd)
 			}
 			if(check == 0)
 				break;
-		
-	buffer_list->next = list_new(ft_strdup(buffer));
-	buffer_list = buffer_list->next;
+	buffer[BUFFER_SIZE] = '\0';
+	check = ft_newline_check(buffer);
+	if(check = 1)
+	{
+			ft_show(buffer_list);
+			buffer_list = ptr;
 	}
-	
-	ft_show(ptr);
+	ptr->content = ft_strdup(buffer);
+	ptr->next = list_new();
+	ptr = ptr->next;
+	}	
+	ft_show(buffer_list);
 
 
 	return;
@@ -158,10 +114,13 @@ void get_next_line(int fd)
 int main(int argc, char **argv) 
 {
 	int i;
-	size_t count;
 	int fd;
 
-	
+	if (argc < 2)
+	{
+		printf("No file error\n");
+		return (1);
+	}	
 	
 	
 	
