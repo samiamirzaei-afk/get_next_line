@@ -16,13 +16,13 @@
 #include <stdlib.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 20
+#define BUFFER_SIZE 11
 #endif
 
 
 typedef struct s_list
 {
-	char *content;
-	struct s_list *next;
+	char		*content;
+	struct s_list	*next;
 
-}	t_str_list;
+}	t_list;

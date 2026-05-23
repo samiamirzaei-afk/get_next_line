@@ -34,6 +34,32 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
+size_t	ft_strlen2(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+//	while (str[i] != '\0')
+//	{
+		write(1, &str[0], 1);
+		write(1, &str[1], 1);
+		write(1, &str[2], 1);
+		write(1, &str[3], 1);
+		write(1, &str[4], 1);
+		write(1, &str[5], 1);
+		write(1, &str[6], 1);
+		write(1, &str[7], 1);
+		write(1, &str[8], 1);
+		write(1, &str[9], 1);
+		write(1, &str[10], 1);
+		write(1, &str[11], 1);
+
+
+//	}
+	return (i);
+}
+
+
 char	*ft_strdup(char *src)
 {
 	int		length;
@@ -51,15 +77,17 @@ char	*ft_strdup(char *src)
 		copy[i] = src[i];
 		i++;
 	}
+
+//	printf("%s\n", copy);
 	return (copy);
 }
 
 
-t_str_list	*list_new(char *new_str)
+t_list	*list_new(char *new_str)
 {
-	t_str_list *list;
+	t_list *list;
 
-	list = malloc(sizeof(t_str_list));
+	list = malloc(sizeof(t_list));
 	if(list == NULL)
 			return(NULL);
 	list->content = new_str;
@@ -69,15 +97,17 @@ t_str_list	*list_new(char *new_str)
 
 
 
-void	ft_show(t_str_list *ptr)
+void	ft_show(t_list *ptr)
 {
-//	t_str_list *current;
+//	t_list *current;
 
 //	current = *ptr;
 	while(ptr != NULL)
 	{	
 		call_again();
-		printf("%s\n", ptr->content);
+		write(1, &ptr->content[0], ft_strlen2(ptr->content));
+
+		//printf("%s\n", ptr->content);
 		ptr = ptr->next;
 	}
 
@@ -94,13 +124,13 @@ void	ft_show(t_str_list *ptr)
 //read, malloc, free
 void get_next_line(int fd)
 {
-	t_str_list *buffer_list;
-	t_str_list	*ptr;
+	t_list *buffer_list;
+	t_list	*ptr;
 	int count;
 	char buffer[BUFFER_SIZE];
 	int check;
 
-	buffer_list = malloc(sizeof(t_str_list));	
+	buffer_list = malloc(sizeof(t_list));	
 	ptr = buffer_list;
 	count = 0;
 	while (count < 10)
@@ -115,6 +145,7 @@ void get_next_line(int fd)
 				break;
 		
 	buffer_list->next = list_new(ft_strdup(buffer));
+	buffer_list = buffer_list->next;
 	}
 	
 	ft_show(ptr);
