@@ -24,6 +24,17 @@ int	call_again(void)
 	
 }
 
+void	ft_show(t_list *ptr)
+{
+	while(ptr->next != NULL)
+	{	
+		call_again();
+		if(ptr->content)
+			write(1, &ptr->content[0], ft_strlen(ptr->content));
+		ptr = ptr->next;
+	}
+}
+
 /*	* * * TEST FUNCTIONS * * * 	*/
 
 
@@ -39,16 +50,6 @@ t_list	*list_new(void)
 	return(list);
 }
 
-void	ft_show(t_list *ptr)
-{
-	while(ptr->next != NULL)
-	{	
-		call_again();
-		if(ptr->content)
-			write(1, &ptr->content[0], ft_strlen(ptr->content));
-		ptr = ptr->next;
-	}
-}
 
 
 int	ft_newline_search(char *buffer)
@@ -108,6 +109,8 @@ void get_next_line(int fd)
 
 	length = 0;
 	buffer_list = malloc(sizeof(t_list));	
+	if(buffer_list == NULL)
+		return ;
 	test = buffer_list;
 	ptr = buffer_list;
 	while(1)
@@ -123,21 +126,22 @@ void get_next_line(int fd)
 	buffer[BUFFER_SIZE] = '\0';
 
 		length++;
-	if(ft_newline_search(buffer))
-	{
-			call_again();
-			printf("%s\n", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
-			length = 0;
-			buffer_list = ptr;
-
-	}
 	
 	ptr->content = ft_strdup(buffer);
 	ptr->next = list_new();
 	ptr = ptr->next;
+		if(ft_newline_search(buffer))
+		{
+			call_again();
+			printf("%s", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
+			length = 0;
+			ft_lstclear(&buffer_list, free);
+			buffer_list = list_new();
+			ptr = buffer_list;
+		}
 	}	
 	printf("\n\n");
-	ft_show(test);
+//	ft_show(test);
 
 
 	return;
@@ -158,6 +162,7 @@ int main(int argc, char **argv)
 	
 	
 	i = 1;
+	i++;
 	fd = open(argv[1], O_RDONLY);
 
 	

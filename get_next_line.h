@@ -16,14 +16,13 @@
 #include <stdlib.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 11
+#define BUFFER_SIZE 7
 #endif
 
 
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *src);
 int	ft_putnbr(int nb);
-void	ft_lstclear(t_list **head, void (*del)(void *));
 
 
 typedef struct s_list
@@ -32,3 +31,5 @@ typedef struct s_list
 	struct s_list	*next;
 
 }	t_list;
+
+void	ft_lstclear(t_list **head, void (*del)(void *));
