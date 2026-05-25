@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/24 14:59:26 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/05/25 16:09:40 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ t_list	*list_new(void)
 	list->next = NULL;
 	return(list);
 }
-
-char	*ft_cat_str(t_list *buffer, char *read_buffer, size_t length)
+ 
+char	*ft_cat_str(char *read_buffer, size_t length)
 {
 	char *str;
 	size_t i;
@@ -58,51 +58,65 @@ char	*ft_cat_str(t_list *buffer, char *read_buffer, size_t length)
 	i = 0;
 	str = malloc((length + 1) * sizeof(char));
 	if(str == NULL)
+	{
+		printf("MALLOC FAIL at ft_cat_str\n")
 			return(NULL);
+
+	}
 	str[length] = '\0';
 	while(i < length)
 		str[i] = read_buffer[i];
 	return(str);
 }
 
-//	hello world
+// if no new line found, save it all.
+// 				++CASE 1++
 //	link01	"José Manuel Velásquez Castillo"
 //	link02	"(born 4 June 1952 in Lima) is a\n"
-//	link03 "Peruvian former footballer who played"
-//	link04 "as a midfielder. Nicknamed "El Patrón\n"
+//	PRINT HERE, 
+//
+// 				++CASE 2++
+//	link01 "Peruvian former footballer who played"
+//	link02 "as a midfielder.\n" 
+//	Link03 "Nicknamed "El Patrón"
+//
 int	ft_newline_search(char *buffer, t_list head)
 {
 	size_t i;
 	size_t k;
 	char *str;
+	int found;
 
+	found = 0;
 	i = 0;
 	k = 0;
 	while(buffer[i])
 	{
 		if(buffer[i] == '\n')
 		{
-			str = ft_cat_str(head, &buffer[k], (i - k))	
+			str = ft_cat_str(&buffer[k], (i - k))	
 			if(str == NULL)
 			{
-					printf("MALLOC FAIL at ft_newline_search (str)\n");
+					printf("MALLOC FAIL at ft_newline_search (ft_cat_str)\n");
 					return(NULL);
 			}
 			head->content = str;
-			head->next = list_new(void);
+			head->next = list_new();
 			if(head == NULL)
 			{
-					printf("MALLOC FAIL at ft_newline_search (head)\n");
+					printf("MALLOC FAIL at ft_newline_search (list_new)\n");
 					return(NULL);
 			}
 				k = i;
+				found = 1;
 		}
 		i++;
 	}
+	if(found == 1)
+			return (1);
+
 	return (-1);
-
 }
-
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
 
@@ -135,22 +149,20 @@ char	*ft_cat_str(t_list *buffer, size_t length)
 //read, malloc, free
 void get_next_line(int fd)
 {
-	t_list *buffer_list;
+	t_list *list_buffer;
 	t_list	*ptr;
-	t_list *test;
 
-	char buffer[BUFFER_SIZE + 1];
+	char read_buffer[BUFFER_SIZE + 1];
 	int check;
 	size_t length;
 
 	length = 0;
-	if(buffer_list == NULL)
+	if(list_buffer == NULL)
 		return ;
-	test = buffer_list;
 	ptr = buffer_list;
 	while(1)
 	{
-			check = read(fd , buffer, BUFFER_SIZE);
+			check = read(fd , read_buffer, BUFFER_SIZE);
 			if(check == -1)
 			{
 				printf("read error!\n");
@@ -158,12 +170,20 @@ void get_next_line(int fd)
 			}
 			if(check == 0)
 				break;
-	buffer[BUFFER_SIZE] = '\0';
-	ft_newline_search(buffer, )
+	read_buffer[BUFFER_SIZE] = '\0';
+	if (ft_newline_search(read_buffer, list_buffer) == -1)
+	{
+		ptr->content = ft_strdup(read_buffer);
+		ptr->next = list_new();
+		ptr = ptr->next;
+			if(ptr == NULL)
+			{
+					printf("MALLOC FAIL at get_next_line (list_new)\n");
+					return(NULL);
+			}
 	
-	ptr->content = ft_strdup(buffer);
-	ptr->next = list_new();
-	ptr = ptr->next;
+	}
+	
 		if(ft_newline_search(buffer))
 		{
 			call_again();
@@ -175,7 +195,6 @@ void get_next_line(int fd)
 		}
 	}	
 	printf("\n\n");
-//	ft_show(test);
 
 
 	return;
