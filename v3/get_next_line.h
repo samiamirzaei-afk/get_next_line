@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/27 17:20:59 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:14:03 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 3
+# define BUFFER_SIZE 42
 #endif
 
 
