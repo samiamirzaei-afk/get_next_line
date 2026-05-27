@@ -24,16 +24,39 @@ int	call_again(void)
 	
 }
 
-void	ft_show(t_list *ptr)
+void print_list(t_list *head)
 {
-	while(ptr->next != NULL)
-	{	
-		call_again();
-		if(ptr->content)
-			write(1, &ptr->content[0], ft_strlen(ptr->content));
-		ptr = ptr->next;
-	}
+    int i = 1;
+    while (head)
+    {
+//      printf("link%d: %s\n", i, head->content);
+		write(1, "link:", 5);
+	if(head->content && i < 5)
+		write(1, head->content, ft_strlen(head->content));
+	 if (head->content == NULL)
+        	write(1, "(null)", 6);
+        write(1, "\n", 1);
+	
+		head = head->next;
+        i++;
+    }
+
+    write(1, "\n\n", 2);
 }
+
+void print_str(t_list *head)
+{
+
+    while (head)
+    {
+	if(head->content)
+		write(1, head->content, ft_strlen(head->content));
+	head = head->next;
+    }
+
+ //   write(1, "\n", 1);
+}
+
 
 /*	* * * TEST FUNCTIONS * * * 	*/
 
@@ -56,16 +79,19 @@ char	*ft_cat_str(char *read_buffer, size_t length)
 	size_t i;
 
 	i = 0;
-	str = malloc((length + 1) * sizeof(char));
+	str = malloc((length + 2) * sizeof(char));
 	if(str == NULL)
 	{
-		printf("MALLOC FAIL at ft_cat_str\n")
+		printf("MALLOC FAIL at ft_cat_str\n");
 			return(NULL);
 
 	}
-	str[length] = '\0';
-	while(i < length)
+	str[length + 1] = '\0';
+	while(i <= length)
+	{
 		str[i] = read_buffer[i];
+		i++;
+	}
 	return(str);
 }
 
@@ -80,46 +106,65 @@ char	*ft_cat_str(char *read_buffer, size_t length)
 //	link02 "as a midfielder.\n" 
 //	Link03 "Nicknamed "El Patrón"
 //
-int	ft_newline_search(char *buffer, t_list head)
+int ft_newline_search(char *buffer, t_list **head)
 {
-	size_t i;
-	size_t k;
-	char *str;
-	int found;
+    size_t i;
+    size_t k;
+    char *str;
+    int found;
 
-	found = 0;
-	i = 0;
-	k = 0;
-	while(buffer[i])
+    found = 0;
+    i = 0;
+    k = 0;
+    while(buffer[i])
+    {
+        if(buffer[i] == '\n')
+        {
+            str = ft_cat_str(&buffer[k], (i - k));
+            if(str == NULL)
+            {
+                    printf("MALLOC FAIL at ft_newline_search (ft_cat_str)\n");
+                    return(-1);
+            }
+            (*head)->content = str;
+            (*head)->next = list_new();
+			(*head) = (*head)->next;
+            if(*head == NULL)
+            {
+                    printf("MALLOC FAIL at ft_newline_search (list_new)\n");
+                    return(-1);
+            }
+                k = i + 1;
+                found = 1;
+        }
+        i++;
+    }
+	if(k != i)
 	{
-		if(buffer[i] == '\n')
-		{
-			str = ft_cat_str(&buffer[k], (i - k))	
-			if(str == NULL)
-			{
-					printf("MALLOC FAIL at ft_newline_search (ft_cat_str)\n");
-					return(NULL);
-			}
-			head->content = str;
-			head->next = list_new();
-			if(head == NULL)
-			{
-					printf("MALLOC FAIL at ft_newline_search (list_new)\n");
-					return(NULL);
-			}
-				k = i;
-				found = 1;
-		}
-		i++;
+            str = ft_cat_str(&buffer[k], (i - k));
+            if(str == NULL)
+            {
+                    printf("MALLOC FAIL at ft_newline_search (ft_cat_str)\n");
+                    return(-1);
+            }
+            (*head)->content = str;
+            (*head)->next = list_new();
+			(*head) = (*head)->next;
+            if(*head == NULL)
+            {
+                    printf("MALLOC FAIL at ft_newline_search (list_new)\n");
+                    return(-1);
+            }
 	}
-	if(found == 1)
-			return (1);
+    if(found == 1)
+            return (1);
 
-	return (-1);
+    return(-1);
 }
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
 
+/*
 char	*ft_cat_str(t_list *buffer, size_t length)
 {
 	char *str;
@@ -143,23 +188,24 @@ char	*ft_cat_str(t_list *buffer, size_t length)
 	}
 	return(str);
 }
-
+*/
 
 
 //read, malloc, free
 void get_next_line(int fd)
 {
 	t_list *list_buffer;
-	t_list	*ptr;
+	t_list	*head;
 
 	char read_buffer[BUFFER_SIZE + 1];
 	int check;
 	size_t length;
 
 	length = 0;
+	list_buffer = list_new();
 	if(list_buffer == NULL)
 		return ;
-	ptr = buffer_list;
+	head = list_buffer;
 	while(1)
 	{
 			check = read(fd , read_buffer, BUFFER_SIZE);
@@ -170,30 +216,41 @@ void get_next_line(int fd)
 			}
 			if(check == 0)
 				break;
+			
 	read_buffer[BUFFER_SIZE] = '\0';
-	if (ft_newline_search(read_buffer, list_buffer) == -1)
+	while(ft_newline_search(read_buffer, &head) == -1)
 	{
-		ptr->content = ft_strdup(read_buffer);
-		ptr->next = list_new();
-		ptr = ptr->next;
-			if(ptr == NULL)
-			{
-					printf("MALLOC FAIL at get_next_line (list_new)\n");
-					return(NULL);
-			}
+		check = read(fd , read_buffer, BUFFER_SIZE);
+		if(check == -1)
+		{
+			printf("read error!\n");
+			return ;
+		}
+		if(check == 0)
+			break;
 	
 	}
+//	print_list(list_buffer);
+	call_again();
+	print_str(list_buffer);
+	head = list_buffer;
+	ft_lstclear(&head, free);
+	list_buffer = list_new();
+	if(list_buffer == NULL)
+		return ;
+	head = list_buffer;
+	}
 	
-		if(ft_newline_search(buffer))
-		{
-			call_again();
-			printf("%s", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
+/*
+	printf("%s", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
 			length = 0;
 			ft_lstclear(&buffer_list, free);
 			buffer_list = list_new();
 			ptr = buffer_list;
 		}
-	}	
+	}
+*/
+
 	printf("\n\n");
 
 
