@@ -142,7 +142,7 @@ void get_next_line(int fd)
 	}	
 	printf("\n\n");
 //	ft_show(test);
-
+//
 
 	return;
 

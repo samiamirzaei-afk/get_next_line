@@ -54,15 +54,18 @@ char	*ft_cat_str(char *read_buffer, size_t length)
 void ft_list_clear(t_list **head)
 {
 	t_list *ptr;
+	t_list *ptr2;
 
 	if(*head == NULL)
 			return ;
 	ptr = *head;
 	while(ptr != NULL)
 	{
-		free((*head)->content);
-		ptr = (*head)->next;
-		free(*head);
+		if(ptr->content)
+			free(ptr->content);
+		ptr2 = ptr;
+		ptr = ptr->next;
+		free(ptr2);
 	}
 }
 
@@ -114,49 +117,60 @@ void print_list(t_list *head)
         head = head->next;
         i++;
     }
+
+    printf("\n\n");
 }
 
 int main(void)
 {
-    t_list 	*head = NULL;
+	t_list 	*head = NULL;
 	t_list *ptr;
 
 
-	head = malloc(sizeof(t_list));
-	if (head == NULL)
+	ptr = list_new();
+	if (ptr == NULL)
 			return(0);
 
-	ptr = head;
-    // Test 1: BUFFER_SIZE = 4, string = "hellooo world\n"
-    ft_newline_search("he\nl   \nlo\noo \nworld\n", &head);
-    print_list(ptr);
-	*head = *ptr;
-    ft_list_clear(&head);
-	return (0);
-    /*
-	
-	//REPLACE_NEW
+	head = ptr;
+	printf("string: [he\\nl---\\nlo\\noo \\nworld\\n]\n");
+   	ft_newline_search("he\nl---\nlo\noo \nworld\n", &head);
+   	print_list(ptr);
+	head = ptr;
+   	ft_list_clear(&head);
 
-    // Test 2: BUFFER_SIZE = 10, string = "long way\nfrom home\npal"
-    ft_newline_search("long way\nfrom home\npal", &head);
-    print_list(head);
-    ft_list_clear(REPLACE_CLEAR);
-    //REPLACE_NEW
 
-    // Additional test: string with no newline, BUFFER_SIZE = 5 (example)
+
+	ptr = list_new();
+	if (ptr == NULL)
+			return(0);
+
+	head = ptr;	
+	printf("string: [long way\\nfrom home\\npal]\n");
+   	ft_newline_search("long way\nfrom home\npal", &head);
+	print_list(ptr);
+	head = ptr;
+	ft_list_clear(&head);
+
+	ptr = list_new();
+	if (ptr == NULL)
+			return(0);
+	head = ptr;
+	printf("string: [No newline here]\n");
     ft_newline_search("No newline here", &head);
-    print_list(head);
-    ft_list_clear(REPLACE_CLEAR);
-    //REPLACE_NEW
-
-    // Test with multiple newlines and exact buffer boundary
+    print_list(ptr);
+    head = ptr;
+    ft_list_clear(&head);
+	ptr = list_new();
+	if (ptr == NULL)
+			return(0);
+	head = ptr;
+	printf("string:[abc\\ndef\\nghi]\n");
     ft_newline_search("abc\ndef\nghi", &head);
-    print_list(head);
-    ft_list_clear(REPLACE_CLEAR);
-    //REPLACE_NEW
+    print_list(ptr);
+    head = ptr;
+    ft_list_clear(&head);
 
     return 0;
 
-*/
 }
 
