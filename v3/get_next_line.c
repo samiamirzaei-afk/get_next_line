@@ -6,11 +6,46 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/27 17:18:13 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/05/28 11:01:16 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+
+
+
+static void	ft_strcopy(char *result, const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		result[i] = str[i];
+		i++;
+	}
+}
+
+char	*ft_strjoin(const char *str1, const char *str2)
+{
+	int		len1;
+	int		len2;
+	char	*result;
+
+	if (!str1 || !str2)
+		return (NULL);
+	len1 = ft_strlen(str1);
+	len2 = ft_strlen(str2);
+	result = malloc((len1 + len2 + 1) * sizeof(char));
+	if (result == NULL)
+		return (NULL);
+	result[len1 + len2] = '\0';
+	ft_strcopy(&result[0], str1);
+	ft_strcopy(&result[len1], str2);
+	return (result);
+}
+
 
 /*	* * * TEST FUNCTIONS * * * 	*/
 
@@ -66,7 +101,8 @@ char *ft_newline_search(char *read_buffer, char **extra, bool *found)
         }
 		i++;
     }
-    return("");
+	*extra = ft_strdup(read_buffer);
+    return(ft_strdup(""));
 }
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
@@ -75,49 +111,43 @@ char *ft_newline_search(char *read_buffer, char **extra, bool *found)
 //read, malloc, free
 char *get_next_line(int fd)
 {
-	static char *extra;
+	static char *left_over = NULL;
 	char read_buffer[BUFFER_SIZE + 1];
 	int check;
 	char *final;
 	bool found;
+	char *temp;
 
 	found = false;
-	if(extra)
+	if(left_over && *left_over)
 	{
-		final = ft_newline_search(extra, &extra, &found);
-		if(found)
-			return(final);
+		temp = ft_newline_search(left_over, &left_over, &found);
+		if(found == true)
+			return(temp);
 	}
-	while(!found )
+	while(found == false)
 	{
-			check = read(fd , read_buffer, BUFFER_SIZE);
-			if(check == -1)
-			{
-				printf("read error!\n");
-				return(NULL) ;
-			}
-			if(check == 0)
-				break;
-			
-	read_buffer[BUFFER_SIZE] = '\0';
-	final = ft_newline_search(read_buffer, &extra, &found);
-	if(final == NULL)
+		check = read(fd , read_buffer, BUFFER_SIZE);
+		if(check == -1)
+		{
+			printf("read error!\n");
 			return(NULL) ;
-	
-	}
-
-/*
-	printf("%s", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
-			length = 0;
-			ft_lstclear(&buffer_list, free);
-			buffer_list = list_new();
-			ptr = buffer_list;
 		}
+		if(check == 0)
+			return(NULL);
+			
+		read_buffer[BUFFER_SIZE] = '\0';
+		final = ft_newline_search(read_buffer, &left_over, &found);
+		if(final == NULL)
+			return(NULL);
+		if(temp && *temp)
+		{
+			final = ft_strjoin(final, temp);
+			free(temp);
+		}
+
+		return(final);
 	}
-*/
-
-	return(final);
-
 }
 
 int main(int argc, char **argv) 
