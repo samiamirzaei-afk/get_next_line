@@ -11,31 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-int	call_again(void)
-{
-	static unsigned int line;
-
-	write(1, "Line", 4);
-	ft_putnbr(line);
-	write(1, " :", 2);
-	++line;	
-	return(line);
-	
-	
-}
-void print_str(t_list *head)
-{
-
-    while (head)
-    {
-	if(head->content)
-		write(1, head->content, ft_strlen(head->content));
-	head = head->next;
-    }
-
- //   write(1, "\n", 1);
-}
-
 
 /*	* * * TEST FUNCTIONS * * * 	*/
 
@@ -67,7 +42,7 @@ char    *ft_cat_str(char *read_buffer, long length)
     return (str);
 }
 
-char *ft_newline_search(char *read_buffer, char *extra, bool *found)
+char *ft_newline_search(char *read_buffer, char **extra, bool *found)
 {
     long i;
     char *str;
@@ -83,7 +58,7 @@ char *ft_newline_search(char *read_buffer, char *extra, bool *found)
                     printf("MALLOC FAIL at ft_newline_search (ft_cat_str)\n");
                     return(NULL);
             }
-			extra = ft_cat_str(&read_buffer[i + 1], -1);
+			*extra = ft_cat_str(&read_buffer[i + 1], -1);
 			if(extra == NULL)
 					return(NULL);
 			*found = true;
@@ -109,8 +84,9 @@ char *get_next_line(int fd)
 	found = false;
 	if(extra)
 	{
-		ft_newline_search(extra, extra, &found);
-	
+		final = ft_newline_search(extra, &extra, &found);
+		if(found)
+			return(final);
 	}
 	while(!found )
 	{
@@ -124,7 +100,7 @@ char *get_next_line(int fd)
 				break;
 			
 	read_buffer[BUFFER_SIZE] = '\0';
-	final = ft_newline_search(read_buffer, extra, &found);
+	final = ft_newline_search(read_buffer, &extra, &found);
 	if(final == NULL)
 			return(NULL) ;
 	
@@ -161,7 +137,7 @@ int main(int argc, char **argv)
 	i++;
 	fd = open(argv[1], O_RDONLY);
 
-	while(67){
+	while(1){
 			char *line = get_next_line(fd);
 			if (!line){
 					break;
