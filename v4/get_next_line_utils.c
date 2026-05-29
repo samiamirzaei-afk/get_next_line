@@ -99,7 +99,7 @@ void	*ft_memchr(const void *str, int number, size_t size)
 	}
 	return (NULL);
 }
-char	*ft_substr(char const *str, unsigned int start, size_t len)
+char	*ft_substr(char *str, unsigned int start, size_t len)
 {
 	size_t	i;
 	char	*result;

@@ -97,13 +97,15 @@ int	main(void)
 {
 	char *str01 = NULL;
 	char *str02 = NULL;
-	char *extra = malloc(strlen("aaa10aaa20aaaaaa30aaaa40"));
+	char *extra = NULL;
 	extra = strdup("aaa1\naaa2\naaaaa3\naaa4\n");
 	while(extra && *extra)
 	{
-		printf("%s", ft_newline_search_plus(&extra));
-		
-		
+		if(extra == NULL)
+			break;
+		printf("%s", (str01 =ft_newline_search_plus(&extra)));
+		free(str01);
 	}
-
+	if(!extra || !*extra)
+		free(extra);
 }

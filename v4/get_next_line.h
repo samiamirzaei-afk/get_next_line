@@ -27,7 +27,7 @@
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *src);
 int	ft_putnbr(int nb);
-
+char	*ft_substr(char *str, unsigned int start, size_t len);
 
 typedef struct s_list
 {
