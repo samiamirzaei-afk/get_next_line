@@ -26,7 +26,7 @@ static void	ft_strcopy(char *result, char *str)
 		i++;
 	}
 }
-
+/*
 char	*ft_strjoin(char *str1, char *str2)
 {
 	int		len1;
@@ -45,6 +45,7 @@ char	*ft_strjoin(char *str1, char *str2)
 	ft_strcopy(&result[len1], str2);
 	return (result);
 }
+*/
 //maybe add int free, 0 being free non, 1: frees str1, 2: str2, 3: both
 char    *ft_strjoin_plus(char **str1, char **str2, int tofree)
 {
@@ -160,11 +161,11 @@ int ft_newline_search_plus(char **extra, char **temp, int tofree, char **temp3)
         return(0);
 }
 
-int ft_read(char **buffer, int fd)
+int ft_read(char *buffer, int fd)
 {
 	int check;
 
-	check = read(fd , *buffer, BUFFER_SIZE);
+	check = read(fd , buffer, BUFFER_SIZE);
 	if(check == -1)
 	{
 		printf("read error!\n");
@@ -172,7 +173,8 @@ int ft_read(char **buffer, int fd)
 	}
 	if(check == 0)
 		return(0);
-	(*buffer)[BUFFER_SIZE] = '\0';
+	buffer[BUFFER_SIZE] = '\0';
+	return (check);
 }
 
 
@@ -182,14 +184,13 @@ char *get_next_line(int fd)
 {
 	static char *extra = NULL;
 	char read_buffer[BUFFER_SIZE + 1];
+	char *ptr_read_buffer;
 	int check;
 	int read_check;
-	char *final;
-	bool found;
 	char *result;
 	char *temp;
-	
-	found = false;
+
+	read_check = 1;	
 	if(extra && *extra)
 	{
 		 check = ft_newline_search_plus(&extra, &result, 1, &temp);
@@ -201,22 +202,25 @@ char *get_next_line(int fd)
 	check = 1;
 	while(read_check)
 	{
-		read_check = ft_read(&read_buffer, fd);
+		read_check = ft_read(read_buffer, fd);
 		if(read_check == -1)
 			return (NULL);
 		if(read_check == 0)
 			break;
-		check = ft_newline_search_plus(&read_buffer, &result, 0, &temp);
+		ptr_read_buffer = read_buffer;
+		check = ft_newline_search_plus(&ptr_read_buffer, &result, 0, &temp);
 		if (check == -1)
 			return(NULL);
-		if (check == 1)
+		if (check == 0)
 		{
 			result = ft_strjoin_plus(&extra, &result, 2);	
 			return (result);
 		}
-		extra = ft_strjoin_plus(&extra, &read_buffer, 1);
-			if (extra == NULL);
+		extra = ft_strjoin_plus(&extra, &temp, 2);
+			if (extra == NULL)
 				return (NULL);
+		if(check == 1)
+			return(result);
 	}
 	return(extra);
 
