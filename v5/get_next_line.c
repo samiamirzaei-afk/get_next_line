@@ -130,7 +130,7 @@ int ft_read(char *buffer, int fd)
 	}
 	if(check == 0)
 		return(0);
-	buffer[BUFFER_SIZE] = '\0';
+	buffer[check] = '\0';
 	return (check);
 }
 
@@ -172,8 +172,15 @@ char *get_next_line(int fd)
 			return (NULL);
 		if(read_check == 0)
 		{
+			if(extra && *extra)
+			{
+				temp = extra;
+				extra = NULL;
+				return(temp);
+
+			}
 			if(extra_check == 0)
-				free(extra);
+				return(extra);
 			break;
 		}
 		ptr_read_buffer = read_buffer;
@@ -186,25 +193,28 @@ char *get_next_line(int fd)
 		if (check == 1 && extra_check == 1)
 		{
 //			result = ft_strjoin_plus(&extra, &result, 2);
-			extra = ft_strjoin_plus(&extra, &temp, 2);	
+//			extra = ft_strjoin_plus(&extra, &temp, 2);	
+			extra = ft_strdup(temp);
+			free(temp);
 			return (result);
 
 		}
 		if (check == 1 && extra_check == 0)
 		{
 			result = ft_strjoin_plus(&extra, &result, 3);	
+			extra = temp;
 			return (result);
 		}
 		if (check == 0 && extra_check == 1)
 		{
-			extra = ft_strjoin_plus(&extra, &temp, 2);
+			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 2);
 				if (extra == NULL)
 					return (NULL);
 			extra_check = 1;	
 		}
 		if (check == 0 && extra_check == 0)
 		{
-			extra = ft_strjoin_plus(&extra, &temp, 2);
+			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 2);
 				if (extra == NULL)
 					return (NULL);
 		}
@@ -239,8 +249,7 @@ int main(int argc, char **argv)
 		}
 		printf("%s", line);
 		i++;
-	//	free(line);
+		free(line);
 	}
-	get_next_line(-4);
 	close(fd);
 }
