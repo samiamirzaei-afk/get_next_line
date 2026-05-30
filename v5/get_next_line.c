@@ -146,7 +146,7 @@ char *get_next_line(int fd)
 	int extra_check;
 	int read_check;
 	char *result;
-	char *temp;
+	char *stored_buffer;
 /*
 	if(fd <= -2)
 	{
@@ -158,7 +158,7 @@ char *get_next_line(int fd)
 	extra_check = 1;	
 	if(extra && *extra)
 	{
-		 extra_check = ft_newline_search_plus(&extra, &result, 1, &temp);
+		 extra_check = ft_newline_search_plus(&extra, &result, 1, &stored_buffer);
 		if (extra_check == -1)
 			return (NULL);
 		if (extra_check == 1)
@@ -172,11 +172,11 @@ char *get_next_line(int fd)
 			return (NULL);
 		if(read_check == 0)
 		{
-			if(extra && *extra)
+			if((extra && *extra) || extra != NULL)
 			{
-				temp = extra;
+				stored_buffer = extra;
 				extra = NULL;
-				return(temp);
+				return(stored_buffer);
 
 			}
 			if(extra_check == 0)
@@ -185,7 +185,7 @@ char *get_next_line(int fd)
 		}
 		ptr_read_buffer = read_buffer;
 		//check: 0 = not found, 1= found, -1= malloc fail
-		check = ft_newline_search_plus(&ptr_read_buffer, &result, 0, &temp);
+		check = ft_newline_search_plus(&ptr_read_buffer, &result, 0, &stored_buffer);
 		if (check == -1)
 			return(NULL);
 	//	extra_check: 0= extra has stuff, but without target
@@ -193,28 +193,28 @@ char *get_next_line(int fd)
 		if (check == 1 && extra_check == 1)
 		{
 //			result = ft_strjoin_plus(&extra, &result, 2);
-//			extra = ft_strjoin_plus(&extra, &temp, 2);	
-			extra = ft_strdup(temp);
-			free(temp);
+//			extra = ft_strjoin_plus(&extra, &stored_buffer, 2);	
+			extra = ft_strdup(stored_buffer);
+			free(stored_buffer);
 			return (result);
 
 		}
 		if (check == 1 && extra_check == 0)
 		{
 			result = ft_strjoin_plus(&extra, &result, 3);	
-			extra = temp;
+			extra = stored_buffer;
 			return (result);
 		}
 		if (check == 0 && extra_check == 1)
 		{
-			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 2);
+			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 0);
 				if (extra == NULL)
 					return (NULL);
 			extra_check = 1;	
 		}
 		if (check == 0 && extra_check == 0)
 		{
-			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 2);
+			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 1);
 				if (extra == NULL)
 					return (NULL);
 		}
