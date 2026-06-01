@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/28 18:34:02 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/01 10:23:27 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,14 +192,15 @@ char *get_next_line(int fd)
 	//		     1= extra is empty
 		if (check == 1 && extra_check == 0)
 		{
-			result = ft_strjoin_plus(&extra, &result, 0);
+			result = ft_strjoin_plus(&extra, &result, 1);
+			extra = NULL;
 			extra = ft_strjoin_plus(&extra, &stored_buffer, 2);	
 			return (result);
 
 		}
 		if (check == 1 && extra_check == 1)
 		{
-			extra = stored_buffer;
+			extra = ft_strdup(stored_buffer);
 			free(stored_buffer);
 			return (result);
 		}
