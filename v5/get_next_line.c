@@ -190,19 +190,17 @@ char *get_next_line(int fd)
 			return(NULL);
 	//	extra_check: 0= extra has stuff, but without target
 	//		     1= extra is empty
-		if (check == 1 && extra_check == 1)
+		if (check == 1 && extra_check == 0)
 		{
-//			result = ft_strjoin_plus(&extra, &result, 2);
-//			extra = ft_strjoin_plus(&extra, &stored_buffer, 2);	
-			extra = ft_strdup(stored_buffer);
-			free(stored_buffer);
+			result = ft_strjoin_plus(&extra, &result, 0);
+			extra = ft_strjoin_plus(&extra, &stored_buffer, 2);	
 			return (result);
 
 		}
-		if (check == 1 && extra_check == 0)
+		if (check == 1 && extra_check == 1)
 		{
-			result = ft_strjoin_plus(&extra, &result, 3);	
 			extra = stored_buffer;
+			free(stored_buffer);
 			return (result);
 		}
 		if (check == 0 && extra_check == 1)
@@ -210,7 +208,7 @@ char *get_next_line(int fd)
 			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 0);
 				if (extra == NULL)
 					return (NULL);
-			extra_check = 1;	
+			extra_check = 0;	
 		}
 		if (check == 0 && extra_check == 0)
 		{
