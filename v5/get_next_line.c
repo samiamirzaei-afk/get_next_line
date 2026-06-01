@@ -87,7 +87,7 @@ char    *ft_cat_str(char *read_buffer, long length)
     return (str);
 }
 //tofree: 0 = non, 1= free extra
-int ft_newline_search_plus(char **extra, char **result, int tofree, char **temp3)
+int ft_newline_search_plus(char **extra, char **result, int tofree, char **stored_buffer)
 {
     long i;
     char *temp2;
@@ -107,7 +107,7 @@ int ft_newline_search_plus(char **extra, char **result, int tofree, char **temp3
 		    return (-1);
 	    if(tofree == 0)
 	    {
-	    	*temp3 = temp2;
+	    	*stored_buffer = temp2;
 		return(1);
 	    }
 	    *extra = temp2;
@@ -192,7 +192,7 @@ char *get_next_line(int fd)
 	//		     1= extra is empty
 		if (check == 1 && extra_check == 0)
 		{
-			result = ft_strjoin_plus(&extra, &result, 1);
+			result = ft_strjoin_plus(&extra, &result, 3);
 			extra = NULL;
 			extra = ft_strjoin_plus(&extra, &stored_buffer, 2);	
 			return (result);
@@ -200,22 +200,25 @@ char *get_next_line(int fd)
 		}
 		if (check == 1 && extra_check == 1)
 		{
+			free(extra);
 			extra = ft_strdup(stored_buffer);
+			if(extra == NULL)
+				return (NULL);
 			free(stored_buffer);
 			return (result);
-		}
-		if (check == 0 && extra_check == 1)
-		{
-			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 0);
-				if (extra == NULL)
-					return (NULL);
-			extra_check = 0;	
 		}
 		if (check == 0 && extra_check == 0)
 		{
 			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 1);
 				if (extra == NULL)
 					return (NULL);
+		}		
+		if (check == 0 && extra_check == 1)
+		{
+			extra = ft_strjoin_plus(&extra, &ptr_read_buffer, 1);
+				if (extra == NULL)
+					return (NULL);
+			extra_check = 0;	
 		}
 	}
 	return(NULL);
@@ -241,7 +244,7 @@ int main(int argc, char **argv)
 
 	while(1)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(0);
 		if (!line)
 		{
 			break;

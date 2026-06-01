@@ -17,7 +17,7 @@
 #include <stdbool.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 15
+# define BUFFER_SIZE 100
 #endif
 #ifndef TARGET
 # define TARGET '\n'
