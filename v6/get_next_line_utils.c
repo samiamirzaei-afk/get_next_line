@@ -10,7 +10,6 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-
 char	*ft_strdup(char *src)
 {
 	int		length;
@@ -30,7 +29,6 @@ char	*ft_strdup(char *src)
 	}
     return (copy);
 }
-
 char	*ft_substr(char *str, unsigned int start, size_t len)
 {
 	size_t	i;

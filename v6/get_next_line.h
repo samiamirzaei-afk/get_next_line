@@ -17,14 +17,34 @@
 #include <stdbool.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+# define BUFFER_SIZE 3
 #endif
 #ifndef TARGET
 # define TARGET '\n'
 #endif
-
+#ifndef EMPTY
+# define EMPTY 1
+#endif
+#ifndef FULL
+# define FULL 0
+#endif
+#ifndef FOUND
+# define FOUND 1
+#endif
+#ifndef NOT_FOUND
+# define NOT_FOUND 0
+#endif
 
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *src);
+int	ft_putnbr(int nb);
 char	*ft_substr(char *str, unsigned int start, size_t len);
 
+typedef struct s_list
+{
+	char		*content;
+	struct s_list	*next;
+
+}	t_list;
+
+void	ft_lstclear(t_list **head, void (*del)(void *));
