@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/03 11:37:50 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/03 11:42:41 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	ft_newline_search(char **extra, char **result)
 }
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
-// read, malloc, free
+/* read, malloc, free */
 
 char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 {

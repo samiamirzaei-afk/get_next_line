@@ -6,15 +6,16 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/03 11:32:08 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/03 11:43:33 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-
+/*
 # include <fcntl.h>
 # include <stdio.h>
+*/
 # include <stdlib.h>
 # include <unistd.h>
 
