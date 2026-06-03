@@ -6,198 +6,194 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/23 16:36:54 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/03 11:37:50 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-int	call_again(void)
-{
-	static unsigned int line;
 
-	write(1, "Line", 4);
-	ft_putnbr(line);
-	write(1, " :", 2);
-	++line;	
-	return(line);
-	
-	
+void	ft_strcopy(char *result, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		result[i] = str[i];
+		i++;
+	}
 }
 
-void	ft_show(t_list *ptr)
+/*tofree: 0 free non, 1= frees str1*/
+char	*ft_strjoin_plus(char **str1, char **str2, int tofree)
 {
-	while(ptr->next != NULL)
-	{	
-		call_again();
-		if(ptr->content)
-			write(1, &ptr->content[0], ft_strlen(ptr->content));
-		ptr = ptr->next;
+	int		len1;
+	int		len2;
+	char	*result;
+
+	len1 = 0;
+	len2 = 0;
+	if (*str1 != NULL && *str1)
+		len1 = ft_strlen(*str1);
+	if (*str2 != NULL && *str2)
+		len2 = ft_strlen(*str2);
+	result = malloc((len1 + len2 + 1) * sizeof(char));
+	if (result == NULL)
+	{
+		if (tofree)
+			free(*str1);
+		return (NULL);
 	}
+	result[len1 + len2] = '\0';
+	if (len1 != 0)
+		ft_strcopy(&result[0], *str1);
+	if (tofree == 1 && *str1)
+		free(*str1);
+	if (len2 != 0)
+		ft_strcopy(&result[len1], *str2);
+	return (result);
 }
 
 /*	* * * TEST FUNCTIONS * * * 	*/
-
-
-t_list	*list_new(void)
+int	ft_newline_search(char **extra, char **result)
 {
-	t_list *list;
-
-	list = malloc(sizeof(t_list));
-	if(list == NULL)
-			return(NULL);
-	list->content = NULL;
-	list->next = NULL;
-	return(list);
-}
-
-
-
-int	ft_newline_search(char *buffer)
-{
-	size_t i;
+	long	i;
+	char	*temp2;
 
 	i = 0;
-	while(buffer[i])
+	while ((*extra)[i])
 	{
-		if(buffer[i] == '\n')
-				return(1);
+		if ((*extra)[i] == TARGET)
+		{
+			*result = ft_substr(*extra, 0, i + 1);
+			if (*result == NULL)
+				return (free(*extra), -1);
+			temp2 = ft_substr(*extra, i + 1, ft_strlen(*extra));
+			if (temp2 == NULL)
+			{
+				free(*extra);
+				free(*result);
+				return (-1);
+			}
+			free(*extra);
+			*extra = temp2;
+			return (1);
+		}
 		i++;
 	}
-	return (-1);
-
+	return (0);
 }
-
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
+// read, malloc, free
 
-char	*ft_cat_str(t_list *buffer, size_t length)
+char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 {
-	char *str;
-	size_t i;
-	size_t j;
-
-	i = 0;
-	j = 0;
-	str = malloc((length + 1) * sizeof(char));
-	str[length] = '\0';
-	while(buffer->content)
+	while (1)
 	{
-			j = 0;
-			while(buffer->content[j])
-			{
-				str[i] = buffer->content[j];
-				i++;
-				j++;
-			}
-			buffer = buffer->next;
+		var->read_check = ft_read(read_buffer, fd);
+		if (var->read_check == -1 || var->read_check == 0)
+		{
+			if (*extra)
+				return (free(*extra), NULL);
+			return (NULL);
+		}
+		var->ptr_read_buffer = read_buffer;
+		*extra = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
+		if (*extra == NULL)
+			return (NULL);
+		var->check = ft_newline_search(extra, &var->result);
+		if (var->check == -1)
+			return (NULL);
+		if (var->check == FOUND)
+			return (var->result);
 	}
-	return(str);
+	return (NULL);
 }
 
-
-
-//read, malloc, free
-void get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	t_list *buffer_list;
-	t_list	*ptr;
-	t_list *test;
+	static char	*extra = NULL;
+	char		read_buffer[BUFFER_SIZE + 1];
+	t_ver		var;
 
-	char buffer[BUFFER_SIZE + 1];
-	int check;
-	size_t length;
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	var.extra_check = EMPTY;
+	if (extra && extra[0])
+	{
+		var.extra_check = ft_newline_search(&extra, &var.result);
+		if (var.extra_check == -1)
+			return (NULL);
+		if (var.extra_check == FOUND)
+			return (var.result);
+	}
+	return (ft_get_line(&extra, read_buffer, fd, &var));
+}
 
-	length = 0;
-	buffer_list = malloc(sizeof(t_list));	
-	if(buffer_list == NULL)
-		return ;
-	test = buffer_list;
-	ptr = buffer_list;
+/*
+char	*get_next_line(int fd)
+{
+	static char	*extra = NULL;
+	char		read_buffer[BUFFER_SIZE + 1];
+	char		*result;
+	t_ver		var;
+
+	var.extra_check = EMPTY;
+	if(extra && extra[0])
+	{
+		var.extra_check = ft_newline_search(&extra, &result);
+		if (var.extra_check == -1)
+			return (NULL);
+		if (var.extra_check == FOUND)
+			return (result);
+	}
 	while(1)
 	{
-			check = read(fd , buffer, BUFFER_SIZE);
-			if(check == -1)
-			{
-				printf("read error!\n");
-				return ;
-			}
-			if(check == 0)
-				break;
-	buffer[BUFFER_SIZE] = '\0';
-
-		length++;
-	
-	ptr->content = ft_strdup(buffer);
-	ptr->next = list_new();
-	ptr = ptr->next;
-		if(ft_newline_search(buffer))
+		var.read_check = ft_read(read_buffer, fd);
+		if(var.read_check == -1 || var.read_check == 0)
 		{
-			call_again();
-			printf("%s", ft_cat_str(buffer_list, ((length * BUFFER_SIZE) + check)));
-			length = 0;
-			ft_lstclear(&buffer_list, free);
-			buffer_list = list_new();
-			ptr = buffer_list;
+			if(extra)
+				return(free(extra), NULL);
+			return (NULL);
 		}
-	}	
-	printf("\n\n");
-//	ft_show(test);
-//
-
-	return;
-
+		var.ptr_read_buffer = read_buffer;
+		extra = ft_strjoin_plus(&extra, &var.ptr_read_buffer, 1);
+		if(extra == NULL)
+			return(NULL);
+		var.check = ft_newline_search(&extra, &result);
+		if (var.check == -1)
+			return(NULL);
+		if (var.check == FOUND)
+			return (result);
+	}
+	return(NULL);
 }
 
-int main(int argc, char **argv) 
+int	main(int argc, char **argv)
 {
-	int i;
-	int fd;
+	int		i;
+	int		fd;
+	char	*line;
 
 	if (argc < 2)
 	{
 		printf("No file error\n");
 		return (1);
-	}	
-	
-	
-	
-	i = 1;
-	i++;
-	fd = open(argv[1], O_RDONLY);
-
-	
-	get_next_line(fd);
-/*	i = 0;
-	while(i < 15)
-	{
-		printf("%d\n", i++);
 	}
-*/
+	i = 0;
+	fd = open(argv[1], O_RDONLY);
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+		{
+			break ;
+		}
+		printf("%s", line);
+		i++;
+		free(line);
+	}
+	close(fd);
 }
-
-/*
- 
-	
-//	int j = 500;
-
-//	printf("%d\n", (char)&i + 1);
-//	return (0);
-
-
-	 	
-	int j = 500;
-    
-    // Get pointer to j
-    unsigned char *byte_ptr = (unsigned char *)&j;
-    
-    // Access each byte
-    printf("Byte at &j (offset 0): %d\n", byte_ptr[0]);   // 244 (0xF4)
-    printf("Byte at &j+1 (offset 1): %d\n", byte_ptr[1]); // 1   (0x01)
-    printf("Byte at &j+2 (offset 2): %d\n", byte_ptr[2]); // 0
-    printf("Byte at &j+3 (offset 3): %d\n", byte_ptr[3]); // 0
-    
-    // Or specifically just &j+1
-    printf("Value at &j+1: %d\n", *(byte_ptr + 1)); // Also 1
-    
-    return 0;
-*/	
+*/

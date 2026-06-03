@@ -6,30 +6,51 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/05/23 12:35:24 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/03 11:32:08 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 20
-#endif
+# include <fcntl.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+# ifndef TARGET
+#  define TARGET '\n'
+# endif
+# ifndef EMPTY
+#  define EMPTY 1
+# endif
+# ifndef FOUND
+#  define FOUND 1
+# endif
 
-size_t	ft_strlen(const char *str);
-char	*ft_strdup(char *src);
-int	ft_putnbr(int nb);
-
-
-typedef struct s_list
+typedef struct s_variables
 {
-	char		*content;
-	struct s_list	*next;
+	char	*ptr_read_buffer;
+	int		check;
+	int		extra_check;
+	int		read_check;
+	char	*result;
 
-}	t_list;
+}			t_ver;
 
-void	ft_lstclear(t_list **head, void (*del)(void *));
+/*get_next_line.c*/
+void		ft_strcopy(char *result, char *str);
+char		*ft_strjoin_plus(char **str1, char **str2, int tofree);
+int			ft_newline_search(char **extra, char **result);
+char		*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var);
+char		*get_next_line(int fd);
+
+size_t		ft_strlen(const char *str);
+char		*ft_strdup(char *src);
+char		*ft_substr(char *str, unsigned int start, size_t len);
+int			ft_read(char *buffer, int fd);
+
+#endif

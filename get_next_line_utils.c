@@ -1,57 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/03 10:12:26 by ammirzae          #+#    #+#             */
+/*   Updated: 2026/06/03 10:18:30 by ammirzae         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-
-static int	ft_max_min_neg_check(int *nb, int *count)
-{
-	if (*nb == 2147483647)
-		return ((*count = write(1, "2147483647", 10)));
-	if (*nb == -2147483648)
-		return ((*count = write(1, "-2147483648", 11)));
-	if (*nb < 0)
-	{
-		*count = write(1, "-", 1);
-		if (*count == -1)
-			return (-1);
-		*nb *= -1;
-	}
-	return (1);
-}
-
-static int	ft_show_nbr(int *count, int *i, char *digit_buffer)
-{
-	int	result;
-
-	while (digit_buffer[*i] != '\0')
-	{
-		result = write(1, &digit_buffer[(*i)--], 1);
-		if (result == -1)
-			return (-1);
-		*count += result;
-	}
-	return (*count);
-}
-
-int	ft_putnbr(int nb)
-{
-	int		i;
-	int		count;
-	char	digit_buffer[12];
-
-	count = 0;
-	if ((ft_max_min_neg_check(&nb, &count)) != 1)
-		return (count);
-	digit_buffer[0] = '\0';
-	i = 1;
-	while (nb > 9)
-	{
-		digit_buffer[i] = (nb % 10) + '0';
-		nb /= 10;
-		i++;
-	}
-	digit_buffer[i] = nb + '0';
-	if (ft_show_nbr(&count, &i, digit_buffer) == -1)
-		return (-1);
-	return (count);
-}
 
 size_t	ft_strlen(const char *str)
 {
@@ -62,7 +21,6 @@ size_t	ft_strlen(const char *str)
 		i++;
 	return (i);
 }
-
 
 char	*ft_strdup(char *src)
 {
@@ -81,25 +39,44 @@ char	*ft_strdup(char *src)
 		copy[i] = src[i];
 		i++;
 	}
-    return (copy);
+	return (copy);
 }
 
-void	ft_lstclear(t_list **head, void (*del)(void *))
+char	*ft_substr(char *str, unsigned int start, size_t len)
 {
-	t_list	*ptr;
-	t_list	*ptr2;
+	size_t	i;
+	char	*result;
 
-	if (!head || !del)
-		return ;
-	ptr = *head;
-	while (ptr != NULL)
+	if (!str)
+		return (NULL);
+	i = ft_strlen(str);
+	if (i <= start || len == 0)
+		return (ft_strdup(""));
+	if (len > (i - start))
+		len = i - start;
+	result = malloc((len + 1) * sizeof(char));
+	if (result == NULL)
+		return (NULL);
+	result[len] = '\0';
+	i = 0;
+	while (str[start] && i < len)
 	{
-		ptr2 = ptr;
-		ptr = ptr->next;
-		if (ptr2->content)
-			del(ptr2->content);
-		free(ptr2);
+		result[i] = str[start];
+		i++;
+		start++;
 	}
-	*head = NULL;
+	return (result);
 }
 
+int	ft_read(char *buffer, int fd)
+{
+	int	check;
+
+	check = read(fd, buffer, BUFFER_SIZE);
+	if (check == -1)
+		return (-1);
+	if (check == 0)
+		return (0);
+	buffer[check] = '\0';
+	return (check);
+}
