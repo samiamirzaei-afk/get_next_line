@@ -39,6 +39,7 @@ typedef struct s_variables
 	int		check;
 	int		extra_check;
 	int		read_check;
+	char	*result;
 
 }	t_ver;
 

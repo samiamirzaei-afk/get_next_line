@@ -12,9 +12,6 @@
 
 #include "get_next_line.h"
 
-
-
-
 static void	ft_strcopy(char *result, char *str)
 {
 	int	i;
@@ -27,7 +24,7 @@ static void	ft_strcopy(char *result, char *str)
 	}
 }
 
-//tofree: 0 free non, 1= frees str1
+/*tofree: 0 free non, 1= frees str1*/
 char    *ft_strjoin_plus(char **str1, char **str2, int tofree)
 {
     int     len1;
@@ -46,7 +43,7 @@ char    *ft_strjoin_plus(char **str1, char **str2, int tofree)
     result[len1 + len2] = '\0';
 	if(len1 != 0)
     		ft_strcopy(&result[0], *str1);
-	if(tofree == 1 || tofree == 3)
+	if(tofree == 1)
 	{
 		if(*str1)
 			free(*str1);
@@ -106,6 +103,66 @@ int ft_read(char *buffer, int fd)
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
 //read, malloc, free
+
+
+char *ft_funk(char **extra, char *read_buffer, int fd, t_ver *var)
+{
+
+
+
+	printf("extra_check: '%d'", var->extra_check);
+	exit(44);
+/*
+	while(1)
+	{
+		*var.read_check = ft_read(read_buffer, fd);
+		if(var.read_check == -1 || var.read_check == 0)
+		{	
+			if(extra)
+				return(free(extra), NULL);
+			return (NULL);
+		}
+		var.ptr_read_buffer = read_buffer;
+		extra = ft_strjoin_plus(&extra, &var.ptr_read_buffer, 1);
+		if(extra == NULL)
+			return(NULL);	
+		var.check = ft_newline_search(&extra, &result);
+		if (var.check == -1)
+			return(NULL);
+		if (var.check == FOUND)
+			return (result);
+	}
+	return(NULL);
+*/
+
+}
+
+
+char *get_next_line(int fd)
+{
+	static char *extra = NULL;
+	char read_buffer[BUFFER_SIZE + 1];
+	t_ver var;
+
+	var.extra_check = EMPTY;	
+	if(extra && extra[0])
+	{
+		var.extra_check = ft_newline_search(&extra, &ver.result);
+		if (var.extra_check == -1)
+			return (NULL);
+		if (var.extra_check == FOUND)
+			return (result);
+	}
+
+	while(1)
+	{
+		ft_funk(&extra, read_buffer, fd, &var);
+	
+	}
+	return(NULL);
+}
+
+/*
 char *get_next_line(int fd)
 {
 	static char *extra = NULL;
@@ -143,7 +200,7 @@ char *get_next_line(int fd)
 	}
 	return(NULL);
 }
-
+*/
 int main(int argc, char **argv) 
 {
 	int i;
