@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/03 10:12:26 by ammirzae          #+#    #+#             */
+/*   Updated: 2026/06/03 10:18:30 by ammirzae         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	ft_strlen(const char *str)
@@ -27,8 +39,9 @@ char	*ft_strdup(char *src)
 		copy[i] = src[i];
 		i++;
 	}
-    return (copy);
+	return (copy);
 }
+
 char	*ft_substr(char *str, unsigned int start, size_t len)
 {
 	size_t	i;
@@ -55,4 +68,18 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 	return (result);
 }
 
+int	ft_read(char *buffer, int fd)
+{
+	int	check;
 
+	check = read(fd, buffer, BUFFER_SIZE);
+	if (check == -1)
+	{
+		printf("read error!\n");
+		return (-1);
+	}
+	if (check == 0)
+		return (0);
+	buffer[check] = '\0';
+	return (check);
+}
