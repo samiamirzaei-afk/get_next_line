@@ -1,8 +1,8 @@
 *This project has been created as part of the 42 curriculum by ammirzae.*
 
-#Get Next Line – Because reading a line from a file is way too tedious
+# Get Next Line – Because reading a line from a file is way too tedious
 
-##Description
+## Description
 
 `get_next_line` is a funtion that takes a file descriptor and reads the first line from it.
 A “line” for this function is a block of text that ends with a newline symbol “\n”. if no newline is found then the function will just print everything until the end of the file.
