@@ -52,6 +52,6 @@ char		*get_next_line(int fd);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(char *src);
 char		*ft_substr(char *str, unsigned int start, size_t len);
-int			ft_read(char *buffer, int fd);
+int			ft_read(char *buffer, int fd, char **extra);
 
 #endif

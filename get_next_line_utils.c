@@ -68,7 +68,7 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 	return (result);
 }
 
-int	ft_read(char *buffer, int fd)
+int	ft_read(char *buffer, int fd, char **extra)
 {
 	int	check;
 	int i;
@@ -76,7 +76,11 @@ int	ft_read(char *buffer, int fd)
 	i = 0;
 	check = read(fd, buffer, BUFFER_SIZE);
 	if (check == -1)
-		return (-1);
+	{
+		if(*extra)
+			return(free(*extra), -1);	
+		return(-1);
+	}
 	if (check == 0)
 	{
 		while(i < BUFFER_SIZE)
@@ -85,6 +89,6 @@ int	ft_read(char *buffer, int fd)
 			i++;
 		}
 	}
-		buffer[check] = '\0';
+	buffer[check] = '\0';
 	return (check);
 }

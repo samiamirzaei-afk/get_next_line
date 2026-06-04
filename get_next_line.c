@@ -91,14 +91,9 @@ char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 {
 	while (1)
 	{
-		var->ptr_read_buffer = read_buffer;
-		var->read_check = ft_read(read_buffer, fd);
+		var->read_check = ft_read(read_buffer, fd, extra);
 		if (var->read_check == -1)
-		{
-			if (*extra)
-				return (free(*extra), NULL);
 			return (NULL);
-		}
 		if(var->read_check == 0)
 		{
 			if(*extra)
@@ -137,6 +132,7 @@ char	*get_next_line(int fd)
 		if (var.extra_check == FOUND)
 			return (var.result);
 	}
+	var.ptr_read_buffer = read_buffer;
 	return (ft_get_line(&extra, read_buffer, fd, &var));
 }
 
@@ -192,8 +188,11 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	fd = open(argv[1], O_RDONLY);
-	while ((line = get_next_line(fd)) != NULL)
+	while (1)
 	{
+		line = get_next_line(fd);
+		if(line == NULL)
+			break;	
 		printf("%s", line);
 		free(line);
 		i++;
