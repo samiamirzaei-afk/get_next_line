@@ -7,7 +7,10 @@
 `get_next_line` is a funtion that takes a file descriptor and reads the first line from it.
 A “line” for this function is a block of text that ends with a newline symbol “\n”. if no newline is found then the function will just print everything until the end of the file.
 The goal of this project is to learn about static varibles and thus their use is needed for this project.
-
+the way the function works is that it uses a macro called `BUFFER_SIZE` that can also be changed during complilation, you can change it simply by adding `-D BUFFER_SIZE=n` and changing 'n' to any number you like (default is 42).
+**BE CAREFUL** if `BUFFER_SIZE` is changed to a big enough number, it will be biger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000 
+`BUFFER_SIZE` is used to determine the ammount of bytes the function `read` is allowed to read after each call.
+if no newline was found in the buffer size, it will be saved in the heap with `malloc`.
 ```c
 char *ft_printf(int fd);
 ```
@@ -53,8 +56,9 @@ cc  -I/path/to/libft.h your_program.c -L/path/to/libft.a -lgnl
 ```
 (as stated above, if `get_next_line.h` is in the same directory, then the compiler will add it automatically)
 
+### Resources
 - [42 Norm] – Coding standard for 42 projects
--[get_next_line explained] (https://www.youtube.com/watch?v=8E9siq7apUU&pp=ygUNZ2V0X25leHRfbGluZQ%3D%3D) – A video that explaining this topic
+- [get_next_line explained] (https://www.youtube.com/watch?v=8E9siq7apUU&pp=ygUNZ2V0X25leHRfbGluZQ%3D%3D) – A video that explaining this topic
 
 ### AI usage
 During this project, AI (primarily DeepSeek) was used for the following tasks:
