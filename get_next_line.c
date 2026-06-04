@@ -103,10 +103,10 @@ char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 		{
 			if(*extra)
 			{
-				var->result = ft_strjoin_plus(extra, &var->ptr_read_buffer, 0);
-				return(free(*extra), *extra = NULL, var->result);
+				var->result = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
+				return(*extra = NULL, var->result);
 			}
-			return(NULL)
+			return(NULL);
 		}
 		*extra = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
 		if (*extra == NULL)
@@ -196,7 +196,7 @@ int	main(int argc, char **argv)
 	{
 		printf("%s", line);
 		free(line);
+		i++;
 	}
 	close(fd);
 }
-

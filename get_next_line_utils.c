@@ -68,7 +68,7 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 	return (result);
 }
 
-int	ft_read(char *buffer, int fd, char **extra, t_ver *var)
+int	ft_read(char *buffer, int fd)
 {
 	int	check;
 	int i;
@@ -80,16 +80,11 @@ int	ft_read(char *buffer, int fd, char **extra, t_ver *var)
 	if (check == 0)
 	{
 		while(i < BUFFER_SIZE)
-		{	
+		{
 			buffer[i] = '\0';
 			i++;
 		}
-		if(*extra)
-			{
-				var->result = ft_strjoin_plus(extra, &var->ptr_read_buffer, 0);
-				return(free(*extra), *extra = NULL, 0);
-			}
-		return (0);
 	}
+		buffer[check] = '\0';
 	return (check);
 }
