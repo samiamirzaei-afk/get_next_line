@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 10:12:26 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/03 10:18:30 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/06 12:05:36 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,19 +71,19 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 int	ft_read(char *buffer, int fd, char **extra)
 {
 	int	check;
-	int i;
+	int	i;
 
 	i = 0;
 	check = read(fd, buffer, BUFFER_SIZE);
 	if (check == -1)
 	{
-		if(*extra)
-			return(free(*extra), -1);	
-		return(-1);
+		if (*extra)
+			return (free(*extra), -1);
+		return (-1);
 	}
 	if (check == 0)
 	{
-		while(i < BUFFER_SIZE)
+		while (i < BUFFER_SIZE)
 		{
 			buffer[i] = '\0';
 			i++;
