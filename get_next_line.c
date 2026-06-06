@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/06 12:06:02 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/06 13:28:51 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ char	*get_next_line(int fd)
 	char		read_buffer[BUFFER_SIZE + 1];
 	t_ver		var;
 
+	if (fd == -1)
+		return (free(extra), NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	var.extra_check = EMPTY;
@@ -188,7 +190,7 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	fd = open(argv[1], O_RDONLY);
-	while (1)
+	while (i < 13)
 	{
 		line = get_next_line(fd);
 		if(line == NULL)
@@ -197,6 +199,7 @@ int	main(int argc, char **argv)
 		free(line);
 		i++;
 	}
+		line = get_next_line(-1);
 	close(fd);
 }
 */
