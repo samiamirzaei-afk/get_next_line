@@ -4,17 +4,18 @@
 
 ## Description
 
-`get_next_line` funtion reads and returns first line from the givene file descriptor.
-A “line” for this function is a block of text that ends with a newline symbol “\n”. if no newline is found then the function will just print everything until the end of the file.  
-The goal of this project is to learn about static varibles.
-the way the function works is that it uses a macro called `BUFFER_SIZE` that can also be changed during complilation, you can change it simply by adding `-D BUFFER_SIZE=n` and changing 'n' to any number you like (default is 42).    
+`get_next_line` funtion returns first line from the givene file descriptor.  
+A “line” for this function is a block of text that ends with a newline symbol “\n”. If newline is not found, then the function will just print everything until the end of the file.
+The goal of this project is to learn about static varibles.  
+The function works with a macro called `BUFFER_SIZE` that can also be changed during complilation, you can change it simply by adding `-D BUFFER_SIZE=n` and changing 'n' to any number you like (default is 42).    
 `BUFFER_SIZE` is used to determine the ammount of bytes the function `read` is allowed to read after each call.
-if no newline was found in the buffer size, it will be saved in the heap with `malloc` and joined back to the new buffer.
-**BE CAREFUL** if `BUFFER_SIZE` is changed to a big number, it will be larger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000. 
-
+if no newline was found in the buffer size, it will be saved in the heap with `malloc` and joined back to the new buffer.  
 ```c
 char *get_next_line(int fd);
 ```
+**BE CAREFUL**  
+● If `BUFFER_SIZE` is changed to a big number, it will be larger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000.  
+● If the function stops being called before reading the end of the file, there might still be information inside saved in the heap, give `get_next_line(-1)` to free whatever is left inside. 
 
 ## Instructions
 simply add the header `get_next_line.h` at the top of your C file, and then add `get_next_line.c` `get_next_line_utils.c` while you are compiling your program. (make sure that all these files are in the same folder as your program)
