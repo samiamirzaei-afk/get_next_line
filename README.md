@@ -4,20 +4,20 @@
 
 ## Description
 
-`get_next_line` is a funtion that takes a file descriptor and reads the first line from it.
+`get_next_line` funtion reads and returns first line from the givene file descriptor.
 A “line” for this function is a block of text that ends with a newline symbol “\n”. if no newline is found then the function will just print everything until the end of the file.  
-The goal of this project is to learn about static varibles and thus their use is needed for this project.
+The goal of this project is to learn about static varibles.
 the way the function works is that it uses a macro called `BUFFER_SIZE` that can also be changed during complilation, you can change it simply by adding `-D BUFFER_SIZE=n` and changing 'n' to any number you like (default is 42).    
-
-**BE CAREFUL** if `BUFFER_SIZE` is changed to a big enough number, it will be biger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000 
 `BUFFER_SIZE` is used to determine the ammount of bytes the function `read` is allowed to read after each call.
-if no newline was found in the buffer size, it will be saved in the heap with `malloc`.
+if no newline was found in the buffer size, it will be saved in the heap with `malloc` and joined back to the new buffer.
+**BE CAREFUL** if `BUFFER_SIZE` is changed to a big number, it will be larger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000. 
+
 ```c
-char *ft_printf(int fd);
+char *get_next_line(int fd);
 ```
 
 ## Instructions
-simply add the header `get_next_line.h` at the top of your C file, and then add `get_next_line.c` `get_next_line_utils.c` while you are compiling your program. (make sure that all these files are in the same folder as your main program)
+simply add the header `get_next_line.h` at the top of your C file, and then add `get_next_line.c` `get_next_line_utils.c` while you are compiling your program. (make sure that all these files are in the same folder as your program)
 
 ```bash
 cc  your_program.c  get_next_line.c get_next_line_utils.c 
@@ -50,10 +50,10 @@ bug:
 
 .PHONY: bug all clean fclean
 ```
-use `make` to make a libary, that way you would only need to ad the libary and the header during complilation:
+use `make` to make a libary, that way you would only need to add the libary and the header during complilation:
 
 ```bash
-cc  -I/path/to/libft.h your_program.c -L/path/to/libft.a -lgnl
+cc  -I/path/to/get_next_line.h your_program.c -L/path/to/libgnl.a -lgnl
 ```
 (as stated above, if `get_next_line.h` is in the same directory, then the compiler will add it automatically)
 
