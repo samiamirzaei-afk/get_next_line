@@ -75,10 +75,15 @@ int	ft_read(char *buffer, int fd, char **extra)
 
 	i = 0;
 	check = read(fd, buffer, BUFFER_SIZE);
+	printf("check: %i\n", check);
 	if (check == -1)
 	{
-		if (*extra)
-			return (free(*extra), -1);
+		if (*extra != NULL){
+			printf("**extra: %p | *extra: %p\n", extra, *extra);
+			free(*extra);
+			*extra = NULL;
+			//printf("**extra: %p | *extra: %p\n", extra, *extra);
+		}
 		return (-1);
 	}
 	if (check == 0)

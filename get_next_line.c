@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/06 13:28:51 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:57:57 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,16 @@ char	*ft_strjoin_plus(char **str1, char **str2, int tofree)
 	{
 		if (tofree)
 			free(*str1);
-		return (NULL);
+		return (*str1 = NULL, NULL);
 	}
 	result[len1 + len2] = '\0';
 	if (len1 != 0)
 		ft_strcopy(&result[0], *str1);
 	if (tofree == 1 && *str1)
+	{
 		free(*str1);
+		*str1 = NULL;
+	}
 	if (len2 != 0)
 		ft_strcopy(&result[len1], *str2);
 	return (result);
@@ -66,14 +69,18 @@ int	ft_newline_search(char **extra, char **result)
 		if ((*extra)[i] == TARGET)
 		{
 			*result = ft_substr(*extra, 0, i + 1);
-			if (*result == NULL)
-				return (free(*extra), -1);
-			temp2 = ft_substr(*extra, i + 1, ft_strlen(*extra));
+			printf("res: %p\n ** res %p",result, *result);
+			if (*result == NULL){
+				free(*extra);
+				free(*result);
+				return (*extra = NULL, *result = NULL, -1);
+			}
+			temp2 = ft_substr(*extra, i+1, ft_strlen(*extra));
 			if (temp2 == NULL)
 			{
 				free(*extra);
 				free(*result);
-				return (-1);
+				return (*extra = NULL, *result = NULL, -1);
 			}
 			free(*extra);
 			*extra = temp2;
@@ -108,7 +115,7 @@ char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 			return (NULL);
 		var->check = ft_newline_search(extra, &var->result);
 		if (var->check == -1)
-			return (NULL);
+			return (free(*extra),*extra = NULL,NULL);
 		if (var->check == FOUND)
 			return (var->result);
 	}
@@ -121,10 +128,8 @@ char	*get_next_line(int fd)
 	char		read_buffer[BUFFER_SIZE + 1];
 	t_ver		var;
 
-	if (fd == -1)
-		return (free(extra), NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+		return (free(extra), extra = NULL, NULL);
 	var.extra_check = EMPTY;
 	if (extra && extra[0])
 	{
@@ -176,7 +181,7 @@ char	*get_next_line(int fd)
 	}
 	return(NULL);
 }
-
+*/
 int	main(int argc, char **argv)
 {
 	int		i;
@@ -189,17 +194,33 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	i = 0;
+	(void)argv;
+
 	fd = open(argv[1], O_RDONLY);
-	while (i < 13)
+	while (i < 3)
 	{
 		line = get_next_line(fd);
 		if(line == NULL)
 			break ;
-		printf("%s", line);
+		printf("\n%s", line);
 		free(line);
+		line = NULL;
 		i++;
 	}
-		line = get_next_line(-1);
 	close(fd);
+	get_next_line(-1);
+
+// fd = open(argv[2], O_RDONLY);
+// 	while (1)
+// 	{
+// 		line = get_next_line(fd);
+// 		if(line == NULL)
+// 			break ;
+// 		printf("%s", line);
+// 		free(line);
+// 		i++;
+// 	}
+	//close(fd);
+	get_next_line(666);
 }
-*/
+
