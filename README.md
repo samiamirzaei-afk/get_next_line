@@ -15,7 +15,7 @@ char *get_next_line(int fd);
 ```
 **BE CAREFUL**  
 ● If `BUFFER_SIZE` is changed to a big number, it will be larger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000.  
-● If the function stops being called before reading the end of the file, there might still be information inside saved in the heap, give `get_next_line(-1)` to free whatever is left inside. 
+● If the function stops being called before reading the end of the file, there might still be information inside saved in the heap, give `get_next_line(-n)`("-n" being any negative number) to free whatever is left inside.  
 
 ## Instructions
 simply add the header `get_next_line.h` at the top of your C file, and then add `get_next_line.c` `get_next_line_utils.c` while you are compiling your program. (make sure that all these files are in the same folder as your program)

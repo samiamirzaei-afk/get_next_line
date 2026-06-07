@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/03 11:42:41 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:57:57 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,13 @@ char	*ft_strjoin_plus(char **str1, char **str2, int tofree)
 	if (len1 != 0)
 		ft_strcopy(&result[0], *str1);
 	if (tofree == 1 && *str1)
+	{
 		free(*str1);
+		*str1 = NULL;
+	}
 	if (len2 != 0)
 		ft_strcopy(&result[len1], *str2);
-	return (*str1 = NULL, result);
+	return (result);
 }
 
 /*	* * * TEST FUNCTIONS * * * 	*/
@@ -66,14 +69,18 @@ int	ft_newline_search(char **extra, char **result)
 		if ((*extra)[i] == TARGET)
 		{
 			*result = ft_substr(*extra, 0, i + 1);
-			if (*result == NULL)
-				return (free(*extra), *extra = NULL, -1);
-			temp2 = ft_substr(*extra, i + 1, ft_strlen(*extra));
+			printf("res: %p\n ** res %p",result, *result);
+			if (*result == NULL){
+				free(*extra);
+				free(*result);
+				return (*extra = NULL, *result = NULL, -1);
+			}
+			temp2 = ft_substr(*extra, i+1, ft_strlen(*extra));
 			if (temp2 == NULL)
 			{
 				free(*extra);
 				free(*result);
-				return (*extra = NULL, -1);
+				return (*extra = NULL, *result = NULL, -1);
 			}
 			free(*extra);
 			*extra = temp2;
@@ -94,21 +101,21 @@ char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 		var->read_check = ft_read(read_buffer, fd, extra);
 		if (var->read_check == -1)
 			return (NULL);
-		if(var->read_check == 0)
+		if (var->read_check == 0)
 		{
-			if(*extra)
+			if (*extra)
 			{
 				var->result = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
-				return(*extra = NULL, var->result);
+				return (*extra = NULL, var->result);
 			}
-			return(NULL);
+			return (NULL);
 		}
 		*extra = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
 		if (*extra == NULL)
 			return (NULL);
 		var->check = ft_newline_search(extra, &var->result);
 		if (var->check == -1)
-			return (NULL);
+			return (free(*extra),*extra = NULL,NULL);
 		if (var->check == FOUND)
 			return (var->result);
 	}
@@ -174,37 +181,46 @@ char	*get_next_line(int fd)
 	}
 	return(NULL);
 }
-
+*/
 int	main(int argc, char **argv)
 {
 	int		i;
 	int		fd;
 	char	*line;
-	int k;
+
 	if (argc < 2)
 	{
 		printf("No file error\n");
 		return (1);
 	}
-	k = 1;
-	while(argv[k] != NULL)
-{
-	fd = open(argv[k], O_RDONLY);
-	printf("fd:%d\n\n",fd);
 	i = 0;
-	while (1)
+	(void)argv;
+
+	fd = open(argv[1], O_RDONLY);
+	while (i < 3)
 	{
 		line = get_next_line(fd);
 		if(line == NULL)
-			break;	
-		printf("%s", line);
+			break ;
+		printf("\n%s", line);
 		free(line);
+		line = NULL;
 		i++;
 	}
 	close(fd);
-	get_next_line(-2);
-	k++;
+	get_next_line(-1);
+
+// fd = open(argv[2], O_RDONLY);
+// 	while (1)
+// 	{
+// 		line = get_next_line(fd);
+// 		if(line == NULL)
+// 			break ;
+// 		printf("%s", line);
+// 		free(line);
+// 		i++;
+// 	}
+	//close(fd);
+	get_next_line(666);
 }
 
-}
-*/
