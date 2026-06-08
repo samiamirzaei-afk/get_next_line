@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/07 10:41:59 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/08 15:04:38 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,17 +91,16 @@ char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 {
 	while (1)
 	{
-		var->read_check = ft_read(read_buffer, fd, extra);
+		var->read_check = ft_read(read_buffer, fd, extra,
+				&var->ptr_read_buffer);
 		if (var->read_check == -1)
 			return (NULL);
 		if (var->read_check == 0)
-		{
-			if (*extra)
-			{
-				var->result = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
-				return (*extra = NULL, var->result);
-			}
 			return (NULL);
+		if (var->read_check < BUFFER_SIZE)
+		{
+			var->result = ft_strdup(*extra);
+			return (free(*extra), *extra = NULL, var->result);
 		}
 		*extra = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
 		if (*extra == NULL)
@@ -174,7 +173,7 @@ char	*get_next_line(int fd)
 	}
 	return(NULL);
 }
-
+*/
 int	main(int argc, char **argv)
 {
 	int		i;
@@ -188,24 +187,22 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	k = 1;
-	while(argv[k] != NULL)
-{
-	fd = open(argv[k], O_RDONLY);
-	printf("fd:%d\n\n",fd);
-	i = 0;
-	while (1)
+	while (argv[k] != NULL)
 	{
-		line = get_next_line(fd);
-		if(line == NULL)
-			break ;
-		printf("%s", line);
-		free(line);
-		i++;
+		fd = open(argv[k], O_RDONLY);
+		//	printf("fd:%d\n\n",fd);
+		i = 0;
+		while (1)
+		{
+			line = get_next_line(0);
+			if (line == NULL)
+				break ;
+			printf("%s", line);
+			free(line);
+			i++;
+		}
+		close(fd);
+		get_next_line(-2);
+		k++;
 	}
-	close(fd);
-	get_next_line(-2);
-	k++;
 }
-
-}
-*/

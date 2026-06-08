@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/03 11:43:33 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/08 15:04:53 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <fcntl.h>
 # include <stdio.h>
-
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -52,6 +51,6 @@ char		*get_next_line(int fd);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(char *src);
 char		*ft_substr(char *str, unsigned int start, size_t len);
-int			ft_read(char *buffer, int fd, char **extra);
+int			ft_read(char *buffer, int fd, char **extra, char **buff);
 
 #endif

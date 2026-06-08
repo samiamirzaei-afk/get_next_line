@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 10:12:26 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/07 10:42:19 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/08 15:04:44 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 	return (result);
 }
 
-int	ft_read(char *buffer, int fd, char **extra)
+int	ft_read(char *buffer, int fd, char **extra, char **buff_point)
 {
 	int	check;
 	int	i;
@@ -81,14 +81,12 @@ int	ft_read(char *buffer, int fd, char **extra)
 			return (free(*extra), *extra = NULL, -1);
 		return (-1);
 	}
-	if (check == 0)
-	{
-		while (i < BUFFER_SIZE)
-		{
-			buffer[i] = '\0';
-			i++;
-		}
-	}
 	buffer[check] = '\0';
+	if (check < BUFFER_SIZE)
+	{
+		*extra = ft_strjoin_plus(extra, buff_point, 1);
+		if (*extra == NULL)
+			return (-1);
+	}
 	return (check);
 }
