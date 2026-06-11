@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
+/*   By: student <student@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/03 10:12:26 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/08 15:04:44 by ammirzae         ###   ########.fr       */
+/*   Created: 2024/01/01 00:00:00 by student           #+#    #+#             */
+/*   Updated: 2024/01/01 00:00:00 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,61 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_strdup(char *src)
+char	*ft_strchr(const char *str, int num)
 {
-	int		length;
-	char	*copy;
-	int		i;
+	int	i;
 
 	i = 0;
-	length = ft_strlen(src);
-	copy = malloc((length + 1) * sizeof(char));
-	if (!copy)
-		return (NULL);
-	copy[length] = '\0';
-	while (src[i] != '\0')
+	while (str[i])
 	{
-		copy[i] = src[i];
+		if (str[i] == (unsigned char)num)
+			return ((char *)&str[i]);
 		i++;
 	}
-	return (copy);
+	if ((unsigned char)num == '\0')
+		return ((char *)&str[i]);
+	return (NULL);
+}
+
+void	ft_strcopy(char *result, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		result[i] = str[i];
+		i++;
+	}
+}
+
+char	*ft_strjoin_plus(char **str1, char **str2, int tofree)
+{
+	int		len1;
+	int		len2;
+	char	*result;
+
+	len1 = 0;
+	len2 = 0;
+	if (*str1 != NULL && *str1)
+		len1 = ft_strlen(*str1);
+	if (*str2 != NULL && *str2)
+		len2 = ft_strlen(*str2);
+	result = malloc((len1 + len2 + 1) * sizeof(char));
+	if (result == NULL)
+	{
+		if (tofree)
+			free(*str1);
+		return (*str1 = NULL, NULL);
+	}
+	result[len1 + len2] = '\0';
+	if (len1 != 0)
+		ft_strcopy(&result[0], *str1);
+	if (tofree == 1 && *str1)
+		free(*str1);
+	if (len2 != 0)
+		ft_strcopy(&result[len1], *str2);
+	return (*str1 = NULL, result);
 }
 
 char	*ft_substr(char *str, unsigned int start, size_t len)
@@ -66,27 +103,4 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 		start++;
 	}
 	return (result);
-}
-
-int	ft_read(char *buffer, int fd, char **extra, char **buff_point)
-{
-	int	check;
-	int	i;
-
-	i = 0;
-	check = read(fd, buffer, BUFFER_SIZE);
-	if (check == -1)
-	{
-		if (*extra)
-			return (free(*extra), *extra = NULL, -1);
-		return (-1);
-	}
-	buffer[check] = '\0';
-	if (check < BUFFER_SIZE)
-	{
-		*extra = ft_strjoin_plus(extra, buff_point, 1);
-		if (*extra == NULL)
-			return (-1);
-	}
-	return (check);
 }

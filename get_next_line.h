@@ -3,54 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
+/*   By: student <student@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/08 15:04:53 by ammirzae         ###   ########.fr       */
+/*   Created: 2024/01/01 00:00:00 by student           #+#    #+#             */
+/*   Updated: 2024/01/01 00:00:00 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <fcntl.h>
-# include <stdio.h>
+/*
+#include <fcntl.h>
+#include <stdio.h>
+*/
+
 # include <stdlib.h>
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 100
 # endif
-# ifndef TARGET
-#  define TARGET '\n'
-# endif
-# ifndef EMPTY
-#  define EMPTY 1
+# ifndef LAST_LINE
+#  define LAST_LINE -1
 # endif
 # ifndef FOUND
 #  define FOUND 1
 # endif
 
-typedef struct s_variables
-{
-	char	*ptr_read_buffer;
-	int		check;
-	int		extra_check;
-	int		read_check;
-	char	*result;
+# ifndef TARGET
+#  define TARGET '\n'
+# endif
 
-}			t_ver;
+/* get_next_line.c */
+char    *ft_strdup(char *src);
+int	read_until_newline(int fd, char **extra);
+char	*cut_newline(char *extra);
+int	extra_after_cut(char **extra, size_t result_len);
+char	*get_next_line(int fd);
 
-/*get_next_line.c*/
-void		ft_strcopy(char *result, char *str);
-char		*ft_strjoin_plus(char **str1, char **str2, int tofree);
-int			ft_newline_search(char **extra, char **result);
-char		*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var);
-char		*get_next_line(int fd);
+/* get_next_line_utils.c */
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *str, int num);
+void	ft_strcopy(char *result, char *str);
+char	*ft_strjoin_plus(char **str1, char **str2, int tofree);
+char	*ft_substr(char *str, unsigned int start, size_t len);
 
-size_t		ft_strlen(const char *str);
-char		*ft_strdup(char *src);
-char		*ft_substr(char *str, unsigned int start, size_t len);
-int			ft_read(char *buffer, int fd, char **extra, char **buff);
 
 #endif
