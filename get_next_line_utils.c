@@ -68,25 +68,25 @@ char	*ft_substr(char *str, unsigned int start, size_t len)
 	return (result);
 }
 
-int	ft_read(char *buffer, int fd, char **extra, char **buff_point)
+int	ft_read(int fd, char **extra, char **buff_ptr)
 {
-	int	check;
+	int	bytes;
 	int	i;
 
 	i = 0;
-	check = read(fd, buffer, BUFFER_SIZE);
-	if (check == -1)
+	bytes = read(fd, *buff_ptr, BUFFER_SIZE);
+	if (bytes == -1)
 	{
 		if (*extra)
 			return (free(*extra), *extra = NULL, -1);
 		return (-1);
 	}
-	buffer[check] = '\0';
-	if (check < BUFFER_SIZE)
+	buff_ptr[bytes] = '\0';
+	if (bytes < BUFFER_SIZE)
 	{
-		*extra = ft_strjoin_plus(extra, buff_point, 1);
+		*extra = ft_strjoin_plus(extra, buff_ptr, 1);
 		if (*extra == NULL)
 			return (-1);
 	}
-	return (check);
+	return (bytes);
 }

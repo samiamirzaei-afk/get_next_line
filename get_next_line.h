@@ -35,8 +35,7 @@ typedef struct s_variables
 {
 	char	*ptr_read_buffer;
 	int		check;
-	int		extra_check;
-	int		read_check;
+	int		bytes;
 	char	*result;
 
 }			t_ver;
@@ -51,6 +50,6 @@ char		*get_next_line(int fd);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(char *src);
 char		*ft_substr(char *str, unsigned int start, size_t len);
-int			ft_read(char *buffer, int fd, char **extra, char **buff);
+int			ft_read(int fd, char **extra, char **buff);
 
 #endif

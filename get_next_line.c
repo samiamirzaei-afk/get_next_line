@@ -61,19 +61,20 @@ int	ft_newline_search(char **extra, char **result)
 	char	*temp2;
 
 	i = 0;
-	while ((*extra)[i])
+	while (*extra && (*extra)[i])
 	{
 		if ((*extra)[i] == TARGET)
 		{
 			*result = ft_substr(*extra, 0, i + 1);
+			printf("result: %s\n", *result);
 			if (*result == NULL)
-				return (free(*extra), *extra = NULL, -1);
+				return (free(*extra), *extra = NULL, 1);
 			temp2 = ft_substr(*extra, i + 1, ft_strlen(*extra));
 			if (temp2 == NULL)
 			{
-				free(*extra);
 				free(*result);
-				return (*extra = NULL, -1);
+				*result = NULL;
+				return (free(*extra), *extra = NULL, 1);
 			}
 			free(*extra);
 			*extra = temp2;
@@ -87,6 +88,57 @@ int	ft_newline_search(char **extra, char **result)
 /*	* * * HELPER FUNCTIONS * * * 	*/
 /* read, malloc, free */
 
+/*
+char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
+{
+	while (1)
+	{
+		*extra = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
+		if (*extra == NULL)
+			return (NULL);
+		var->check = ft_newline_search(extra, &var->result);
+		if (var->check == -1)
+			return (NULL);
+		if (var->check == FOUND)
+			return (var->result);
+	}
+	return (NULL);
+}
+*/
+char	*get_next_line(int fd)
+{
+	static char	*extra = NULL;
+	char		read_buffer[BUFFER_SIZE + 1];
+	t_ver		var;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (free(extra), extra = NULL, NULL);
+	var.ptr_read_buffer = read_buffer;
+	var.result = NULL;
+	while(1)
+	{
+		if(ft_newline_search(&extra, &var.result))
+			return (var.result);
+		var.bytes = ft_read(fd, &extra, &var.ptr_read_buffer);
+		if (var.bytes == -1)
+			return (NULL);
+		if (var.bytes == 0)
+			return (NULL);
+/*		if (var.bytes < BUFFER_SIZE)
+		{
+			var.result = ft_strdup(extra);
+			return (free(extra), extra = NULL, var.result);
+		}
+*/
+	}
+	return (ft_get_line(&extra, read_buffer, fd, &var));
+}
+
+
+
+
+
+/*
 char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
 {
 	while (1)
@@ -134,7 +186,7 @@ char	*get_next_line(int fd)
 	var.ptr_read_buffer = read_buffer;
 	return (ft_get_line(&extra, read_buffer, fd, &var));
 }
-
+*/
 /*
 char	*get_next_line(int fd)
 {
@@ -194,7 +246,7 @@ int	main(int argc, char **argv)
 		i = 0;
 		while (1)
 		{
-			line = get_next_line(0);
+			line = get_next_line(fd);
 			if (line == NULL)
 				break ;
 			printf("%s", line);
