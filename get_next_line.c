@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/08 15:04:38 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/12 13:46:25 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	ft_newline_search(char **extra, char **result)
 		if ((*extra)[i] == TARGET)
 		{
 			*result = ft_substr(*extra, 0, i + 1);
-			printf("result: %s\n", *result);
 			if (*result == NULL)
 				return (free(*extra), *extra = NULL, 1);
 			temp2 = ft_substr(*extra, i + 1, ft_strlen(*extra));
@@ -86,25 +85,7 @@ int	ft_newline_search(char **extra, char **result)
 }
 
 /*	* * * HELPER FUNCTIONS * * * 	*/
-/* read, malloc, free */
 
-/*
-char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
-{
-	while (1)
-	{
-		*extra = ft_strjoin_plus(extra, &var->ptr_read_buffer, 1);
-		if (*extra == NULL)
-			return (NULL);
-		var->check = ft_newline_search(extra, &var->result);
-		if (var->check == -1)
-			return (NULL);
-		if (var->check == FOUND)
-			return (var->result);
-	}
-	return (NULL);
-}
-*/
 char	*get_next_line(int fd)
 {
 	static char	*extra = NULL;
@@ -114,29 +95,19 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (free(extra), extra = NULL, NULL);
 	var.ptr_read_buffer = read_buffer;
-	var.result = NULL;
-	while(1)
+	while (1)
 	{
-		if(ft_newline_search(&extra, &var.result))
+		if (ft_newline_search(&extra, &var.result))
 			return (var.result);
 		var.bytes = ft_read(fd, &extra, &var.ptr_read_buffer);
-		if (var.bytes == -1)
+		if (var.bytes <= 0)
 			return (NULL);
-		if (var.bytes == 0)
+		extra = ft_strjoin_plus(&extra, &var.ptr_read_buffer, 1);
+		if (extra == NULL)
 			return (NULL);
-/*		if (var.bytes < BUFFER_SIZE)
-		{
-			var.result = ft_strdup(extra);
-			return (free(extra), extra = NULL, var.result);
-		}
-*/
 	}
-	return (ft_get_line(&extra, read_buffer, fd, &var));
+	return (NULL);
 }
-
-
-
-
 
 /*
 char	*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var)
@@ -225,7 +196,7 @@ char	*get_next_line(int fd)
 	}
 	return(NULL);
 }
-*/
+
 int	main(int argc, char **argv)
 {
 	int		i;
@@ -258,3 +229,4 @@ int	main(int argc, char **argv)
 		k++;
 	}
 }
+*/
