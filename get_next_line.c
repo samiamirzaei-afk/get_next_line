@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:06:29 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/12 13:46:25 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/12 14:50:36 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,17 @@ char	*get_next_line(int fd)
 		if (ft_newline_search(&extra, &var.result))
 			return (var.result);
 		var.bytes = ft_read(fd, &extra, &var.ptr_read_buffer);
+		if (var.bytes == -1)
+				return(NULL);
 		if (var.bytes <= 0)
-			return (NULL);
+		{	
+			if(extra != NULL)
+			{
+				var.result = ft_strdup(extra);
+				return(free(extra), extra = NULL, var.result);
+			}
+			return(NULL);
+		}
 		extra = ft_strjoin_plus(&extra, &var.ptr_read_buffer, 1);
 		if (extra == NULL)
 			return (NULL);
