@@ -6,7 +6,7 @@
 /*   By: ammirzae <ammirzae@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 11:01:06 by ammirzae          #+#    #+#             */
-/*   Updated: 2026/06/08 15:04:53 by ammirzae         ###   ########.fr       */
+/*   Updated: 2026/06/13 15:14:20 by ammirzae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,29 @@
 
 # include <fcntl.h>
 # include <stdio.h>
+
 # include <stdlib.h>
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4
 # endif
+
 # ifndef TARGET
 #  define TARGET '\n'
 # endif
-# ifndef EMPTY
-#  define EMPTY 1
-# endif
-# ifndef FOUND
-#  define FOUND 1
-# endif
 
-typedef struct s_variables
-{
-	char	*ptr_read_buffer;
-	int		check;
-	int		bytes;
-	char	*result;
+/* Utils */
+int		ft_strlen(char *str);
+char	*ft_strchr(char *str, int num);
+void	ft_strcopy(char *dest, char *src);
+char	*ft_strjoin_plus(char **str1, char **str2, short tofree);
+char	*ft_strdup(char *src);
 
-}			t_ver;
-
-/*get_next_line.c*/
-void		ft_strcopy(char *result, char *str);
-char		*ft_strjoin_plus(char **str1, char **str2, int tofree);
-int			ft_newline_search(char **extra, char **result);
-char		*ft_get_line(char **extra, char *read_buffer, int fd, t_ver *var);
-char		*get_next_line(int fd);
-
-size_t		ft_strlen(const char *str);
-char		*ft_strdup(char *src);
-char		*ft_substr(char *str, unsigned int start, size_t len);
-int			ft_read(int fd, char **extra, char **buff);
-
+/* get_next_line */
+char	*ft_substr(char *str, int start, int len);
+int		read_until_newline(char **extra, char **buffer, int fd);
+char	*ft_cut_newline(char *extra);
+int		ft_extra_after_cut(char **extra, char *result);
+char	*get_next_line(int fd);
 #endif
