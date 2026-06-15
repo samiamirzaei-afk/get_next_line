@@ -4,18 +4,18 @@
 
 ## Description
 
-`get_next_line` funtion returns first line from the given file descriptor.  
-A “line” for this function is a block of text that ends with a newline symbol “\n”. If newline is not found, then the function will just print everything until the end of the file. you can also change what simple you want each line to end by adding with `-D TARGET=\'n\'` and swap n with anyletter you want.  
+`get_next_line` function returns first line from the given file descriptor.  
+A “line” for this function is a block of text that ends with a newline symbol “\n”. If newline is not found, then the function will just print everything until the end of the file. you can also change what simply you want each line to end by adding with `-D TARGET=\'n\'` and swap 'n' with any letter you want.  
 
 The goal of this project is to learn about static varibles.  
-The function works with a macro called `BUFFER_SIZE` that can also be changed during complilation, you can change it simply by adding `-D BUFFER_SIZE=n` and changing 'n' to any number you like (default is 42).    
-`BUFFER_SIZE` is used to determine the ammount of bytes the function `read` is allowed to read after each call.
+The function works with a macro called `BUFFER_SIZE` that can also be changed during compilation, you can change it simply by adding `-D BUFFER_SIZE=n` and changing 'n' to any number you like (default is 42).    
+`BUFFER_SIZE` is used to determine the amount of bytes the function `read` is allowed to read after each call.
 if no newline was found in the buffer size, it will be saved in the heap with `malloc` and joined back to the new buffer.  
 ```c
 char *get_next_line(int fd);
 ```
 **BE CAREFUL**  
-● If `BUFFER_SIZE` is changed to a big number, it will be larger than the stack and cause problems, ususally a SEGFAULT. so keep it less than 5'000.  
+● If `BUFFER_SIZE` is changed to a big number, it will be larger than the stack and cause problems, usually a SEGFAULT. so keep it less than 5'000.  
 ● If the function stops being called before reading the end of the file, there might still be information inside saved in the heap, give `get_next_line(-n)`("-n" being any negative number) to free whatever is left inside.  
 
 ## Instructions
@@ -48,6 +48,6 @@ Simply write `make` in the terminal and a simple executable will be created. (ma
 
 ### AI usage
 During this project, AI (primarily DeepSeek) was used for the following tasks:
-- Help with correcting mistakes and better formating the code (varibale names).
+- Help with correcting mistakes and better formating the code (variable names).
 AI did not provide complete function implementations; it was used as a complementary learning tool.
 
