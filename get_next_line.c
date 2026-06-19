@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 		return (0);
 	result = ft_cut_newline(extra);
 	if (!result)
-		return (NULL);
+		return (free(extra), extra = NULL, NULL);
 	if (!(ft_extra_after_cut(&extra, result)))
 		return (free(result), NULL);
 	return (result);
